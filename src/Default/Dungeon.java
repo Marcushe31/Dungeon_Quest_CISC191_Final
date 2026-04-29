@@ -31,6 +31,7 @@ public class Dungeon
 	int hearts = 1;
 	
 	//hello marcus testing
+	int bombs = 1;
 }
 
 
