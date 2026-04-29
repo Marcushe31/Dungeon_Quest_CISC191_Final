@@ -27,7 +27,8 @@ package Default;
  */
 public class Dungeon
 {
-
+	//hello 
+	int hearts = 1;
 }
 
 
