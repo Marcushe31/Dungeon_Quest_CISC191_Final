@@ -82,6 +82,7 @@ public final class SaveManager {
             throw new SaveLoadException("Player save data is malformed.");
         }
         Player player = createPlayer(parts[0]);
+        player.setInventory(new ArrayList<>());
         player.setMaxHealth(Integer.parseInt(parts[2]));
         player.setHealth(Integer.parseInt(parts[1]));
         player.setMaxMana(Integer.parseInt(parts[4]));
