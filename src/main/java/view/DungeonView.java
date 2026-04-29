@@ -156,6 +156,7 @@ public class DungeonView extends JPanel {
 
     @Override
     protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
         Graphics2D g2 = (Graphics2D) graphics.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setPaint(new java.awt.GradientPaint(0, 0, ColorPalette.BACKGROUND_DARK, 0, getHeight(),
@@ -165,6 +166,5 @@ public class DungeonView extends JPanel {
         g2.fillOval(30, 160, 220, 220);
         g2.fillOval(getWidth() - 260, 120, 220, 220);
         g2.dispose();
-        super.paintComponent(graphics);
     }
 }

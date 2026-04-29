@@ -15,6 +15,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import model.Battle;
 import model.Dungeon;
 import model.Enemy;
@@ -216,11 +217,24 @@ public class GameManager {
     private void showResult(String text, String buttonText, Runnable action) {
         resultLabel.setText(text);
         resultButton.setText(buttonText);
+        resultLabel.setForeground(new java.awt.Color(ColorPalette.BORDER_GOLD.getRed(),
+                ColorPalette.BORDER_GOLD.getGreen(), ColorPalette.BORDER_GOLD.getBlue(), 0));
         for (java.awt.event.ActionListener listener : resultButton.getActionListeners()) {
             resultButton.removeActionListener(listener);
         }
         resultButton.addActionListener(event -> action.run());
         switchView(RESULT_VIEW);
+        final int[] alpha = {0};
+        Timer timer = new Timer(30, null);
+        timer.addActionListener(event -> {
+            alpha[0] = Math.min(255, alpha[0] + 18);
+            resultLabel.setForeground(new java.awt.Color(ColorPalette.BORDER_GOLD.getRed(),
+                    ColorPalette.BORDER_GOLD.getGreen(), ColorPalette.BORDER_GOLD.getBlue(), alpha[0]));
+            if (alpha[0] >= 255) {
+                timer.stop();
+            }
+        });
+        timer.start();
     }
 
     private void styleResultButton() {

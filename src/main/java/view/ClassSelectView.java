@@ -54,12 +54,12 @@ public class ClassSelectView extends JPanel {
 
     @Override
     protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
         Graphics2D g2 = (Graphics2D) graphics.create();
         g2.setPaint(new java.awt.GradientPaint(0, 0, ColorPalette.BACKGROUND_DARK, 0, getHeight(),
                 Color.decode("#141D34")));
         g2.fillRect(0, 0, getWidth(), getHeight());
         g2.dispose();
-        super.paintComponent(graphics);
     }
 
     private class ClassCard extends JPanel {
