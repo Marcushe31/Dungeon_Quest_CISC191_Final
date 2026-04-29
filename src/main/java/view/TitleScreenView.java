@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.geom.Path2D;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -19,7 +20,7 @@ import util.ColorPalette;
 /**
  * Title screen with styled menu buttons.
  */
-public class TitleScreenView extends JPanel {
+public class TitleScreenView extends DungeonBackdropPanel {
     private static final int FADE_DELAY = 35;
 
     private final JButton newGameButton;
@@ -28,9 +29,7 @@ public class TitleScreenView extends JPanel {
     private float fadeProgress;
 
     public TitleScreenView() {
-        super(new BorderLayout());
-        setOpaque(true);
-        setBackground(ColorPalette.BACKGROUND_DARK);
+        super(new BorderLayout(), Mood.TITLE);
         fadeProgress = 0.0f;
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
@@ -41,12 +40,12 @@ public class TitleScreenView extends JPanel {
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
-        constraints.insets = new Insets(8, 0, 8, 0);
+        constraints.insets = new Insets(9, 0, 9, 0);
         constraints.fill = GridBagConstraints.HORIZONTAL;
         buttonPanel.add(newGameButton, constraints);
         buttonPanel.add(loadGameButton, constraints);
         buttonPanel.add(quitButton, constraints);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(260, 0, 100, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(310, 0, 88, 0));
         add(buttonPanel, BorderLayout.CENTER);
         startFadeIn();
     }
@@ -80,11 +79,11 @@ public class TitleScreenView extends JPanel {
 
     private JButton createMenuButton(String text) {
         JButton button = new JButton(text);
-        button.setPreferredSize(new Dimension(220, 48));
+        button.setPreferredSize(new Dimension(248, 50));
         button.setFocusPainted(false);
-        button.setFont(new Font(ColorPalette.FONT_FAMILY, Font.BOLD, 16));
+        button.setFont(new Font(ColorPalette.FONT_FAMILY, Font.BOLD, 17));
         button.setForeground(ColorPalette.TEXT_PRIMARY);
-        button.setBackground(ColorPalette.PANEL_BG);
+        button.setBackground(ColorPalette.PANEL_OVERLAY);
         button.setBorder(BorderFactory.createLineBorder(ColorPalette.BORDER_GOLD, 2));
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -95,7 +94,7 @@ public class TitleScreenView extends JPanel {
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent event) {
-                button.setBackground(ColorPalette.PANEL_BG);
+                button.setBackground(ColorPalette.PANEL_OVERLAY);
                 button.setBorder(BorderFactory.createLineBorder(ColorPalette.BORDER_GOLD, 2));
             }
         });
@@ -119,23 +118,46 @@ public class TitleScreenView extends JPanel {
         super.paintComponent(graphics);
         Graphics2D g2 = (Graphics2D) graphics.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(ColorPalette.BACKGROUND_DARK);
-        g2.fillRect(0, 0, getWidth(), getHeight());
-        g2.setColor(new Color(212, 169, 92, 25));
-        g2.fillOval(-120, 60, 260, 260);
-        g2.fillOval(getWidth() - 160, getHeight() - 260, 280, 280);
+        paintTitleSigil(g2);
 
         String title = "DUNGEON QUEST";
-        g2.setFont(new Font(ColorPalette.FONT_FAMILY, Font.BOLD, 42));
+        g2.setFont(new Font(ColorPalette.FONT_FAMILY, Font.BOLD, 54));
         int textWidth = g2.getFontMetrics().stringWidth(title);
         int x = (getWidth() - textWidth) / 2;
-        int y = 150;
+        int y = 168;
         int alpha = Math.round(fadeProgress * 255);
         g2.setColor(new Color(0, 0, 0, Math.min(alpha, 150)));
-        g2.drawString(title, x + 4, y + 4);
+        g2.drawString(title, x + 5, y + 5);
         g2.setColor(new Color(ColorPalette.BORDER_GOLD.getRed(), ColorPalette.BORDER_GOLD.getGreen(),
                 ColorPalette.BORDER_GOLD.getBlue(), alpha));
         g2.drawString(title, x, y);
+        g2.setFont(new Font(ColorPalette.FONT_FAMILY, Font.BOLD, 15));
+        String subtitle = "ENTER THE DEEP HALLS";
+        int subtitleWidth = g2.getFontMetrics().stringWidth(subtitle);
+        g2.setColor(new Color(ColorPalette.TEXT_PRIMARY.getRed(), ColorPalette.TEXT_PRIMARY.getGreen(),
+                ColorPalette.TEXT_PRIMARY.getBlue(), Math.round(fadeProgress * 210)));
+        g2.drawString(subtitle, (getWidth() - subtitleWidth) / 2, y + 42);
         g2.dispose();
+    }
+
+    private void paintTitleSigil(Graphics2D g2) {
+        int centerX = getWidth() / 2;
+        int topY = 84;
+        g2.setColor(new Color(212, 169, 92, 35));
+        g2.setStroke(new java.awt.BasicStroke(3f));
+        g2.drawRoundRect(centerX - 315, topY - 28, 630, 150, 30, 30);
+        g2.setColor(new Color(0, 0, 0, 86));
+        g2.fillRoundRect(centerX - 300, topY - 18, 600, 132, 28, 28);
+
+        Path2D blade = new Path2D.Double();
+        blade.moveTo(centerX, topY - 18);
+        blade.lineTo(centerX + 16, topY + 68);
+        blade.lineTo(centerX, topY + 104);
+        blade.lineTo(centerX - 16, topY + 68);
+        blade.closePath();
+        g2.setColor(new Color(232, 230, 217, 58));
+        g2.fill(blade);
+        g2.setColor(new Color(212, 169, 92, 88));
+        g2.drawLine(centerX - 58, topY + 70, centerX + 58, topY + 70);
     }
 }

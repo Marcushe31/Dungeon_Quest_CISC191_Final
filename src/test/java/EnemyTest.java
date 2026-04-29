@@ -44,15 +44,16 @@ class EnemyTest {
     }
 
     @Test
-    void dragonUsesFireBreathEveryThirdAttack() {
+    void dragonUsesFireBreathEveryFourthAttack() {
         Dragon dragon = new Dragon();
 
+        dragon.attack();
         dragon.attack();
         dragon.attack();
         dragon.attack();
 
         assertTrue(dragon.isBoss());
         assertEquals("Fire Breath", dragon.getAttackName());
-        assertEquals(38, dragon.getDamage());
+        assertEquals(23, dragon.getDamage());
     }
 }

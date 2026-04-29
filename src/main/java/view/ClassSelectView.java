@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -22,20 +23,20 @@ import util.ColorPalette;
 /**
  * Class selection screen with three visual character cards.
  */
-public class ClassSelectView extends JPanel {
+public class ClassSelectView extends DungeonBackdropPanel {
     private Consumer<Player> classSelectedListener;
 
     public ClassSelectView() {
-        super(new BorderLayout(18, 18));
-        setBorder(BorderFactory.createEmptyBorder(28, 36, 36, 36));
-        setBackground(ColorPalette.BACKGROUND_DARK);
+        super(new BorderLayout(18, 18), Mood.DUNGEON);
+        setBorder(BorderFactory.createEmptyBorder(30, 42, 40, 42));
 
         JLabel title = new JLabel("CHOOSE YOUR CLASS", SwingConstants.CENTER);
-        title.setFont(new Font(ColorPalette.FONT_FAMILY, Font.BOLD, 28));
+        title.setFont(new Font(ColorPalette.FONT_FAMILY, Font.BOLD, 30));
         title.setForeground(ColorPalette.BORDER_GOLD);
+        title.setBorder(BorderFactory.createEmptyBorder(0, 0, 14, 0));
         add(title, BorderLayout.NORTH);
 
-        JPanel cardPanel = new JPanel(new GridLayout(1, 3, 18, 0));
+        JPanel cardPanel = new JPanel(new GridLayout(1, 3, 22, 0));
         cardPanel.setOpaque(false);
         cardPanel.add(new ClassCard("WARRIOR", "Rage: 2x damage", new Warrior(), PixelSprite.warriorSprite()));
         cardPanel.add(new ClassCard("MAGE", "Fireball: burn for 3 turns", new Mage(), PixelSprite.mageSprite()));
@@ -56,9 +57,12 @@ public class ClassSelectView extends JPanel {
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D g2 = (Graphics2D) graphics.create();
-        g2.setPaint(new java.awt.GradientPaint(0, 0, ColorPalette.BACKGROUND_DARK, 0, getHeight(),
-                Color.decode("#141D34")));
-        g2.fillRect(0, 0, getWidth(), getHeight());
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(new Color(212, 169, 92, 52));
+        g2.setStroke(new BasicStroke(2f));
+        g2.drawLine(getWidth() / 2 - 210, 83, getWidth() / 2 + 210, 83);
+        g2.setColor(new Color(255, 211, 106, 40));
+        g2.fillOval(getWidth() / 2 - 240, 63, 480, 52);
         g2.dispose();
     }
 
@@ -69,8 +73,7 @@ public class ClassSelectView extends JPanel {
         ClassCard(String title, String skillText, Player previewPlayer, String[] sprite) {
             super(new BorderLayout(8, 8));
             this.previewPlayer = previewPlayer;
-            setOpaque(true);
-            setBackground(ColorPalette.PANEL_BG);
+            setOpaque(false);
             setBorder(BorderFactory.createLineBorder(ColorPalette.BORDER_GOLD, 2));
             setPreferredSize(new Dimension(240, 420));
 
@@ -121,12 +124,21 @@ public class ClassSelectView extends JPanel {
 
         @Override
         protected void paintComponent(Graphics graphics) {
+            Graphics2D g2 = (Graphics2D) graphics.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(ColorPalette.PANEL_OVERLAY);
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
+            g2.setColor(new Color(212, 169, 92, hovered ? 58 : 24));
+            g2.fillRoundRect(10, 10, getWidth() - 20, getHeight() / 2, 10, 10);
+            g2.dispose();
             super.paintComponent(graphics);
             if (hovered) {
-                Graphics2D g2 = (Graphics2D) graphics.create();
-                g2.setColor(new Color(212, 169, 92, 40));
-                g2.fillRoundRect(6, 6, getWidth() - 12, getHeight() - 12, 10, 10);
-                g2.dispose();
+                Graphics2D hoverGraphics = (Graphics2D) graphics.create();
+                hoverGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                hoverGraphics.setColor(new Color(255, 211, 106, 52));
+                hoverGraphics.setStroke(new BasicStroke(5f));
+                hoverGraphics.drawRoundRect(5, 5, getWidth() - 10, getHeight() - 10, 14, 14);
+                hoverGraphics.dispose();
             }
         }
     }

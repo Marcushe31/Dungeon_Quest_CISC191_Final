@@ -9,6 +9,11 @@ public final class ColorPalette {
     public static final Color BACKGROUND_DARK = Color.decode("#0F1729");
     public static final Color PANEL_BG = Color.decode("#1A2238");
     public static final Color PANEL_BG_LIGHT = Color.decode("#24304F");
+    public static final Color PANEL_OVERLAY = new Color(18, 24, 40, 218);
+    public static final Color STONE_DARK = Color.decode("#20283A");
+    public static final Color STONE_LIGHT = Color.decode("#3B455C");
+    public static final Color EMBER_ORANGE = Color.decode("#F28A3A");
+    public static final Color TORCH_YELLOW = Color.decode("#FFD36A");
     public static final Color BORDER_GOLD = Color.decode("#D4A95C");
     public static final Color TEXT_PRIMARY = Color.decode("#E8E6D9");
     public static final Color TEXT_DIM = Color.decode("#8B8B8B");

@@ -1,11 +1,14 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GradientPaint;
 import java.awt.GridLayout;
 import java.awt.RenderingHints;
 import java.util.function.IntConsumer;
@@ -21,7 +24,7 @@ import util.ColorPalette;
 /**
  * Dungeon exploration screen with three door choices.
  */
-public class DungeonView extends JPanel {
+public class DungeonView extends DungeonBackdropPanel {
     private final JLabel playerLabel;
     private final JLabel stageLabel;
     private final JLabel flavorLabel;
@@ -33,9 +36,8 @@ public class DungeonView extends JPanel {
     private IntConsumer doorListener;
 
     public DungeonView() {
-        super(new BorderLayout(18, 18));
-        setBorder(BorderFactory.createEmptyBorder(20, 24, 20, 24));
-        setBackground(ColorPalette.BACKGROUND_DARK);
+        super(new BorderLayout(18, 18), Mood.DUNGEON);
+        setBorder(BorderFactory.createEmptyBorder(22, 28, 22, 28));
 
         JPanel top = new JPanel(new BorderLayout(12, 8));
         top.setOpaque(false);
@@ -59,6 +61,9 @@ public class DungeonView extends JPanel {
         center.setOpaque(false);
         flavorLabel = createLabel("Stage 1: The Dusty Threshold", 22, Font.BOLD);
         flavorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        flavorLabel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(212, 169, 92, 120), 1),
+                BorderFactory.createEmptyBorder(11, 12, 11, 12)));
         center.add(flavorLabel, BorderLayout.NORTH);
 
         JPanel doors = new JPanel(new GridLayout(1, 3, 18, 0));
@@ -121,11 +126,39 @@ public class DungeonView extends JPanel {
     }
 
     private JButton createDoorButton(String text) {
-        JButton button = new JButton(text);
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics graphics) {
+                Graphics2D g2 = (Graphics2D) graphics.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                boolean hover = getModel().isRollover();
+                int margin = hover ? 8 : 12;
+                int archHeight = getHeight() - 24;
+                GradientPaint wood = new GradientPaint(0, margin, Color.decode("#4B3028"), 0, getHeight(),
+                        Color.decode("#1F1515"));
+                g2.setPaint(wood);
+                g2.fillRoundRect(margin, margin + 24, getWidth() - margin * 2, archHeight - 20, 18, 18);
+                g2.fillArc(margin, margin, getWidth() - margin * 2, 90, 0, 180);
+                g2.setColor(new Color(0, 0, 0, 96));
+                for (int x = margin + 24; x < getWidth() - margin; x += 34) {
+                    g2.drawLine(x, margin + 22, x, getHeight() - margin);
+                }
+                g2.setStroke(new BasicStroke(hover ? 5f : 3f));
+                g2.setColor(hover ? ColorPalette.TORCH_YELLOW : ColorPalette.BORDER_GOLD);
+                g2.drawRoundRect(margin, margin + 20, getWidth() - margin * 2, archHeight - 18, 22, 22);
+                g2.drawArc(margin, margin, getWidth() - margin * 2, 90, 0, 180);
+                g2.setColor(new Color(245, 213, 71, hover ? 170 : 110));
+                g2.fillOval(getWidth() - margin - 42, getHeight() / 2, 13, 13);
+                paintDoorText(g2, getText(), getWidth(), getHeight());
+                g2.dispose();
+            }
+        };
         button.setFocusPainted(false);
         button.setFont(new Font(ColorPalette.FONT_FAMILY, Font.BOLD, 18));
         button.setForeground(ColorPalette.TEXT_PRIMARY);
-        button.setBackground(ColorPalette.PANEL_BG);
+        button.setContentAreaFilled(false);
+        button.setOpaque(false);
+        button.setBackground(ColorPalette.PANEL_OVERLAY);
         button.setBorder(BorderFactory.createLineBorder(ColorPalette.BORDER_GOLD, 2));
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -141,6 +174,17 @@ public class DungeonView extends JPanel {
             }
         });
         return button;
+    }
+
+    private void paintDoorText(Graphics2D g2, String text, int width, int height) {
+        g2.setFont(new Font(ColorPalette.FONT_FAMILY, Font.BOLD, 20));
+        FontMetrics metrics = g2.getFontMetrics();
+        int x = (width - metrics.stringWidth(text)) / 2;
+        int y = height - 38;
+        g2.setColor(ColorPalette.SHADOW);
+        g2.drawString(text, x + 2, y + 2);
+        g2.setColor(ColorPalette.TEXT_PRIMARY);
+        g2.drawString(text, x, y);
     }
 
     private String stageText(int stage) {
@@ -159,12 +203,13 @@ public class DungeonView extends JPanel {
         super.paintComponent(graphics);
         Graphics2D g2 = (Graphics2D) graphics.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setPaint(new java.awt.GradientPaint(0, 0, ColorPalette.BACKGROUND_DARK, 0, getHeight(),
-                Color.decode("#18213B")));
-        g2.fillRect(0, 0, getWidth(), getHeight());
-        g2.setColor(new Color(212, 169, 92, 32));
-        g2.fillOval(30, 160, 220, 220);
-        g2.fillOval(getWidth() - 260, 120, 220, 220);
+        int y = Math.max(180, getHeight() - 165);
+        g2.setColor(new Color(0, 0, 0, 94));
+        g2.fillOval(getWidth() / 2 - 330, y, 660, 96);
+        g2.setColor(new Color(212, 169, 92, 40));
+        g2.setStroke(new BasicStroke(2f));
+        g2.drawLine(48, 122, getWidth() - 48, 122);
+        g2.drawLine(48, getHeight() - 74, getWidth() - 48, getHeight() - 74);
         g2.dispose();
     }
 }

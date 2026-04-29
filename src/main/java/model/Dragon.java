@@ -1,14 +1,15 @@
 package model;
 
 /**
- * Final boss with a special attack every third turn.
+ * Final boss with a special attack every fourth turn.
  */
 public class Dragon extends Enemy {
-    private static final int FIRE_BREATH_INTERVAL = 3;
+    private static final int FIRE_BREATH_INTERVAL = 4;
+    private static final double FIRE_BREATH_MULTIPLIER = 1.35;
     private int attackCounter;
 
     public Dragon() {
-        super("Dragon", 200, 25, true);
+        super("Dragon", 150, 17, true);
     }
 
     @Override
@@ -19,7 +20,7 @@ public class Dragon extends Enemy {
     @Override
     public int getDamage() {
         if (isFireBreathReady()) {
-            return (int) Math.round(super.getDamage() * 1.5);
+            return (int) Math.round(super.getDamage() * FIRE_BREATH_MULTIPLIER);
         }
         return super.getDamage();
     }

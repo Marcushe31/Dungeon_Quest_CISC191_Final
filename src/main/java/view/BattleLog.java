@@ -28,11 +28,14 @@ public class BattleLog extends JPanel {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setFont(new Font(ColorPalette.FONT_FAMILY, Font.PLAIN, 12));
-        textArea.setBackground(ColorPalette.PANEL_BG);
+        textArea.setBackground(ColorPalette.PANEL_OVERLAY);
         textArea.setForeground(ColorPalette.TEXT_PRIMARY);
         textArea.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setBorder(BorderFactory.createLineBorder(ColorPalette.BORDER_GOLD));
+        scrollPane.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(ColorPalette.BORDER_GOLD, 2),
+                BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+        scrollPane.getViewport().setBackground(ColorPalette.PANEL_OVERLAY);
         add(scrollPane, BorderLayout.CENTER);
         setOpaque(false);
     }

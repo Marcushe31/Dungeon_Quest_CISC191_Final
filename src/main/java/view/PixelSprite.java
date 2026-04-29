@@ -23,6 +23,7 @@ public class PixelSprite extends JPanel {
     private int cellSize;
     private boolean damageFlash;
     private int offsetX;
+    private int idleTick;
     private int shakeStep;
     private final Map<Character, Color> colorMap;
 
@@ -32,6 +33,11 @@ public class PixelSprite extends JPanel {
         this.colorMap = createColorMap();
         setOpaque(false);
         updatePreferredSize();
+        Timer idleTimer = new Timer(90, event -> {
+            idleTick++;
+            repaint();
+        });
+        idleTimer.start();
     }
 
     public PixelSprite(String[] sprite) {
@@ -98,7 +104,8 @@ public class PixelSprite extends JPanel {
         Graphics2D g2 = (Graphics2D) graphics.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         int xBase = offsetX + Math.max(0, (getWidth() - maxColumns() * cellSize) / 2);
-        int yBase = Math.max(0, (getHeight() - sprite.length * cellSize) / 2);
+        int yBase = Math.max(0, (getHeight() - sprite.length * cellSize) / 2)
+                + (int) Math.round(Math.sin(idleTick * 0.22) * 2);
         for (int row = 0; row < sprite.length; row++) {
             String line = sprite[row];
             for (int col = 0; col < line.length(); col++) {
