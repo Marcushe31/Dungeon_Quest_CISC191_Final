@@ -1,2 +1,6 @@
 bin/
 *.class
+out/
+target/
+*.log
+*.save
