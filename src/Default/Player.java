@@ -27,5 +27,29 @@ package Default;
  */
 public class Player
 {
-
+	private String characterClass;
+	private int health;
+	private int mana;
+	private int stamina;
+	private int damage;
+	
+	public Player(String characterClass, int health, int mana, int stamina, int damage)
+	{
+		this.characterClass = characterClass;
+		this.health = health;
+		this.mana = mana;
+		this.stamina = stamina;
+		this.damage = damage;
+	}
+	
+	public void attack()
+	{
+		System.out.println("Player attacks with " + damage + " damage!");
+	}
+	
+	public void takeDamage(int damage)
+	{
+		health -= damage;
+		System.out.println("Player takes " + damage + " damage! Remaining health: " + health);
+	}
 }
