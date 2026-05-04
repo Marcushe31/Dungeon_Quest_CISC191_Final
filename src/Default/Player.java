@@ -40,23 +40,23 @@ public class Player
 	
 	public void attack()
 	{
-		System.out.println("Player attacks with " + damage + " damage!");
+		System.out.println("Player attacks with " + damage + " damage! Remaining enemy HP is");
 	}
 	
 	public void takeDamage(int damage)
 	{
 		health -= damage;
 		
-		if (health >0)
+		if (health < 0)
 		{
 			health = 0;
 		}
-		System.out.println("Player takes " + damage + " damage! Remaining health: " + health);
+//		System.out.println("Player takes " + damage + " damage! Remaining health: " + health);
 	}
 	
 	public boolean isAlive()
 	{
-		return health >0;
+		return health > 0;
 	}
 	
 	public int getHealth()

@@ -26,7 +26,7 @@ public class Enemy
 	private String enemyType;
 	private int health;
 	private int stamina;
-	private int isBoss;
+	private boolean isBoss;
 	private int damage;
 	
 	public Enemy(String enemyType, int health, int stamina, int damage)
@@ -39,22 +39,23 @@ public class Enemy
 	
 	public void attack()
 	{
-	
+		System.out.println("Enemy attacks with " + damage + " damage!");
 	}
 	
 	public void takeDamage(int damage)
 	{
 		health -= damage;
 		
-		if (health >0)
+		if (health < 0)
 		{
 			health = 0;
 		}
+//		System.out.println("Enemy takes " + damage + " damage! Remaining health: " + health);
 	}
 	
 	public boolean isAlive()
 	{
-		return health >0;
+		return health > 0;
 	}
 	
 	public int getHealth()
@@ -67,7 +68,7 @@ public class Enemy
 		return damage;
 	}
 	
-	public String enemyType()
+	public String getEnemyType()
 	{
 		return enemyType;
 	}
