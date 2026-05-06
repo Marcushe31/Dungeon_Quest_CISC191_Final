@@ -23,6 +23,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import Default.Battle;
+import Default.Enemy;
+import Default.Player;
+
 /**
  * Purpose: The reponsibility of TestBattle is ...
  *
@@ -35,7 +39,29 @@ class TestBattle
 	@Test
 	void test()
 	{
-		fail("Not yet implemented");
+//		fail("Not yet implemented");
+		
+		Player p = new Player("Warrior", 100, 50, 50, 15);
+		Enemy e = new Enemy("Goblin", 60, 30, 10);
+		Battle b = new Battle(p, e);
+		b.startBattle();
+		
+		int initialPlayerHealth = p.getHealth();
+		
+		assertEquals(b.getTurn(), "Player");
+		b.takeTurn("attack");
+		
+		int enemyHealth = e.getHealth();
+		assertEquals(enemyHealth, 45);
+		assertEquals(p.getHealth(), initialPlayerHealth);
+		
+		// Enemy now attacks
+		assertEquals(b.getTurn(), "Enemy");
+		b.takeTurn("");
+		
+		int playerHealth = p.getHealth();
+		assertEquals(playerHealth, 90);
+		assertEquals(e.getHealth(), enemyHealth);
 	}
 
 }

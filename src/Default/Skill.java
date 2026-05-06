@@ -15,27 +15,17 @@
 *
 * <<Add more references here>>
 *
-* Version: 2026-05-04
+* Version: 2026-05-06
 */
-package tests;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
+package Default;
 
 /**
- * Purpose: The reponsibility of TestPlayer is ...
+ * Purpose: The reponsibility of Skill is ...
  *
- * TestPlayer is-a ...
- * TestPlayer is ...
+ * Skill is-a ...
+ * Skill is ...
  */
-class TestPlayer
+public class Skill
 {
-
-	@Test
-	void test()
-	{
-		fail("Not yet implemented");
-	}
-
+	private 
 }
