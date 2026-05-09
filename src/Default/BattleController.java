@@ -20,16 +20,12 @@
 package Default;
 
 /**
- * Purpose: The reponsibility of Skill is ...
+ * Purpose: The reponsibility of BattleController is ...
  *
- * Skill is-a ...
- * Skill is ...
+ * BattleController is-a ...
+ * BattleController is ...
  */
-public class Skill
+public class BattleController
 {
-	private String Rage;
-	private String Fireball;
-	private String Double Shot;
-	private int Damage;
-	private int Cost;
+
 }
