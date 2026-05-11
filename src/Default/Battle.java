@@ -49,33 +49,33 @@ public class Battle
 				+ " vs " + enemy.getEnemyType());
 	}
 	
-//	public void runBattle()
-//	{
-//		Scanner scanner = new Scanner(System.in);
-//		
-//		while(active)
-//		{
-//			if (turn.equals("Player"))
-//			{
-//				System.out.println("\nYour Turn! Choose (attack / block): ");
-//				String action = scanner.nextLine().trim().toLowerCase();
-//				
-//				if(!action.equals("attack") && !action.equals("block"))
-//				{
-//					System.out.println("Invalid action. Type 'attack' or 'block'.");
-//					continue;
-//				}
-//				takeTurn(action);
-//			}
-//			else
-//			{
-//				System.out.println("\nEnemy Turn...");
-//				takeTurn("");
-//			}
-//		}
-//		System.out.println("\nBattle over! Outcome: " + outcome);
-//		scanner.close();
-//	}
+	public void runBattle()
+	{
+		Scanner scanner = new Scanner(System.in);
+		
+		while(active)
+		{
+			if (turn.equals("Player"))
+			{
+				System.out.println("\nYour Turn! Choose (attack / block): ");
+				String action = scanner.nextLine().trim().toLowerCase();
+				
+				if(!action.equals("attack") && !action.equals("block"))
+				{
+					System.out.println("Invalid action. Type 'attack' or 'block'.");
+					continue;
+				}
+				takeTurn(action);
+			}
+			else
+			{
+				System.out.println("\nEnemy Turn...");
+				takeTurn("");
+			}
+		}
+		System.out.println("\nBattle over! Outcome: " + outcome);
+		scanner.close();
+	}
 	
 	/**
 	 * 
@@ -117,7 +117,7 @@ public class Battle
 			}
 			player.takeDamage(incomingDamage);
 			System.out.println("Enemy attacks for " + incomingDamage
-			+ " damage! Player HP" + player.getHealth());
+			+ " damage! Player HP: " + player.getHealth());
 			turn = "Player";
 		}
 		checkBattleEnd();
