@@ -43,7 +43,7 @@ public class Battle
 		active = true;
 		outcome = "In Progress";
 		turn = "Player";
-		System.out.println("Battle started!" + player.getCharacterClass()
+		System.out.println("Battle started! " + player.getCharacterClass()
 				+ " vs " + enemy.getEnemyType());
 	}
 	

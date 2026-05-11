@@ -28,7 +28,7 @@ public class Main
 	public static void main(String[] args)
 	{
 
-		Player player = new Player("Warrior", 100, 50, 50, 15);
+		Player player = new Player("Mage", 100, 50, 50, 10);
 		Enemy enemy = new Enemy("Goblin", 60, 30, 10);
 
 		Battle battle = new Battle(player, enemy);

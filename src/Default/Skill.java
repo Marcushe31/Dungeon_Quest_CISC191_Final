@@ -25,11 +25,26 @@ package Default;
  * Skill is-a ...
  * Skill is ...
  */
-public class Skill
+public abstract class Skill
 {
-	private String Rage;
-	private String Fireball;
-	private String DoubleShot;
-	private int Damage;
-	private int Cost;
+	protected String name;
+	protected int cost;
+	
+	public Skill(String name, int cost) {
+		this.name = name;
+		this.cost = cost;
+	}
+	
+	public abstract void activate(Player user, Enemy target);
+	
+	public String getName() {
+		return name;
+	}
+	
+	public int getCost() {
+		return cost;
+	}
+	
+	
+	
 }
