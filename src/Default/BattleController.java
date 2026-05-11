@@ -27,5 +27,31 @@ package Default;
  */
 public class BattleController
 {
+	private Battle battle;
+	
+	public BattleController(Battle battle) {
+		this.battle = battle;
+	}
+		
+	public void handlePlayerAction(String action) {
+		battle.takeTurn(action);
+	}
+	
+	public void handleEnemyTurn() {
+		battle.takeTurn("attack");
+	}
+	
 
+	
+	
 }
+
+
+
+
+
+
+
+
+
+

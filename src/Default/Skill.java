@@ -29,7 +29,7 @@ public class Skill
 {
 	private String Rage;
 	private String Fireball;
-	private String Double Shot;
+	private String DoubleShot;
 	private int Damage;
 	private int Cost;
 }

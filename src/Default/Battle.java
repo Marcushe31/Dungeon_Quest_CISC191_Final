@@ -16,7 +16,6 @@
  */
 package Default;
 
-import java.util.Scanner;
 
 /**
  * Purpose: The reponsibility of Battle is ...
@@ -31,7 +30,6 @@ public class Battle
 	private boolean active;
 	private String outcome;
 	private String turn;
-	private Scanner scanner;
 	private boolean playerIsBlocking = false;
 
 	public Battle(Player player, Enemy enemy)
@@ -49,33 +47,7 @@ public class Battle
 				+ " vs " + enemy.getEnemyType());
 	}
 	
-	public void runBattle()
-	{
-		Scanner scanner = new Scanner(System.in);
-		
-		while(active)
-		{
-			if (turn.equals("Player"))
-			{
-				System.out.println("\nYour Turn! Choose (attack / block): ");
-				String action = scanner.nextLine().trim().toLowerCase();
-				
-				if(!action.equals("attack") && !action.equals("block"))
-				{
-					System.out.println("Invalid action. Type 'attack' or 'block'.");
-					continue;
-				}
-				takeTurn(action);
-			}
-			else
-			{
-				System.out.println("\nEnemy Turn...");
-				takeTurn("");
-			}
-		}
-		System.out.println("\nBattle over! Outcome: " + outcome);
-		scanner.close();
-	}
+//	
 	
 	/**
 	 * 
@@ -148,6 +120,14 @@ public class Battle
 		return active;
 	}
 
+	public Player getPlayer() {
+		return player;
+	}
+	
+	public Enemy getEnemy() {
+		return enemy; 
+	}
+	
 	public String getOutcome()
 	{
 		return outcome;

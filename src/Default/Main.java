@@ -16,7 +16,6 @@
  */
 package Default;
 
-import java.util.Scanner;
 
 /**
  * Purpose: The reponsibility of Main is ...
@@ -33,26 +32,12 @@ public class Main
 		Enemy enemy = new Enemy("Goblin", 60, 30, 10);
 
 		Battle battle = new Battle(player, enemy);
+		BattleController battleController = new BattleController(battle);
+		BattleScannerInput battleScannerInput = new BattleScannerInput(battle, battleController);
+
 		battle.startBattle();
-		battle.runBattle();
+		battleScannerInput.runBattle();
 		
-		// TODO: move to startBattle
-//		while (battle.isActive())
-//		{
-//			System.out.println("\nYour Turn! Choose (attack / block): ");
-//			String action = scanner.nextLine().trim().toLowerCase();
-//
-//			if (!action.equals("attack") && !action.equals("block"))
-//			{
-//				System.out.println("Invalid action. Type 'attack' or 'block'.");
-//				continue;
-//			}
-//			
-//			Character currentCharacter = battle.takeTurn(action);
-//			battle.takeTurn(action);
-//		}
-//
-//		System.out.println("\nBattle over! Outcome: " + battle.getOutcome());
-//		scanner.close();
+		
 	}
 }

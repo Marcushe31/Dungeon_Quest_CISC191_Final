@@ -29,35 +29,53 @@ import java.util.Scanner;
  */
 public class BattleScannerInput
 {
-	private String turn;
-	private boolean active;
-	private String outcome;
+	private Battle battle;
+	private BattleController battleController;
+	
+	public BattleScannerInput(Battle battle, BattleController battleController) {
+		this.battle = battle;
+		this.battleController = battleController;
+	}
+
 	
 	public void runBattle()
 	{
 		Scanner scanner = new Scanner(System.in);
 		
-		while(active)
+		while(battle.isActive())
 		{
-			if (turn.equals("Player"))
+			if (battle.getTurn().equals("Player"))
 			{
 				System.out.println("\nYour Turn! Choose (attack / block): ");
-				String action = scanner.nextLine().trim().toLowerCase();
-				
-				if(!action.equals("attack") && !action.equals("block"))
-				{
-					System.out.println("Invalid action. Type 'attack' or 'block'.");
-					continue;
-				}
-				takeTurn(action);
+				String action = getPlayerAction(scanner);
+				battleController.handlePlayerAction(action);
 			}
 			else
 			{
 				System.out.println("\nEnemy Turn...");
-				takeTurn("");
+				battleController.handleEnemyTurn();
 			}
 		}
-		System.out.println("\nBattle over! Outcome: " + outcome);
+		System.out.println("\nBattle over! Outcome: " + battle.getOutcome());
 		scanner.close();
+	}
+
+
+	/**
+	 * Purpose: 
+	 * @param scanner
+	 * @return
+	 */
+	public String getPlayerAction(Scanner scanner)
+	{
+		String action = scanner.nextLine().trim().toLowerCase();
+		
+		while (!action.equals("attack") && !action.equals("block"))
+		{
+			System.out.println("Invalid action. Type 'attack' or 'block'.");
+			action = scanner.nextLine().trim().toLowerCase();
+		}
+		
+		return action;
 	}
 }
