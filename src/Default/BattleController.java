@@ -40,10 +40,6 @@ public class BattleController
 	public void handleEnemyTurn() {
 		battle.takeTurn("attack");
 	}
-	
-
-	
-	
 }
 
 

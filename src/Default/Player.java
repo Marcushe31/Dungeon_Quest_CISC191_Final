@@ -44,6 +44,11 @@ public class Player
 	public Skill getSkill(int index) {
 		return skills.get(index);
 	}
+	
+	public int getSkillCount()
+	{
+		return skills.size();
+	}
 
 	public Player( String characterClass, int health, int mana, int stamina,
 			int damage)

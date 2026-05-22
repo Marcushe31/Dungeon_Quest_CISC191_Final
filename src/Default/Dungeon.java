@@ -19,17 +19,53 @@
 */
 package Default;
 
+import java.util.Random;
+
+
 /**
- * Purpose: The reponsibility of Dungeon is ...
+ * Purpose: The responsibility of Dungeon is ...
  *
  * Dungeon is-a ...
  * Dungeon is ...
  */
 public class Dungeon
 {
-	
-}
+	private Door[] doors;
+	private int stage;
+	private DoorFactory doorFactory;
 
+	public Dungeon()
+	{
+		doors = new Door[3];
+		stage = 1;
+		doorFactory = new DoorFactory();
+	}
+
+	public void generateDoors()
+	{
+		doors = doorFactory.generateDoors();
+	}
+
+	public Door chooseDoor(int doorNumber)
+	{
+		return doors[doorNumber - 1];
+	}
+
+	public Door[] getDoors()
+	{
+		return doors;
+	}
+
+	public int getStage()
+	{
+		return stage;
+	}
+
+	public void nextStage()
+	{
+		stage++;
+	}
+}
 
 
 

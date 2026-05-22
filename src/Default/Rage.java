@@ -27,7 +27,7 @@ package Default;
  */
 public class Rage extends Skill
 {
-	private static final int DAMAGE = 20;
+	private static final int DAMAGE = 35;
 
 	public Rage()
 	{

@@ -18,7 +18,7 @@ package Default;
 
 
 /**
- * Purpose: The reponsibility of Battle is ...
+ * Purpose: The responsibility of Battle is ...
  *
  * Battle is-a ...
  * Battle is ...
@@ -74,6 +74,23 @@ public class Battle
 			{
 				playerIsBlocking = true;
 				System.out.println("Player blocks! Damage reduced next turn");
+			}
+			else if (action.equals("skill"))
+			{
+				if (player.getSkillCount() > 0)
+				{
+					Skill skill = player.getSkill(0);
+					int enemyHealthBefore = enemy.getHealth();
+					skill.activate(player, enemy);
+					int damageDone = enemyHealthBefore - enemy.getHealth();
+					System.out.println("Player uses " + skill.getName()
+							+ " for " + damageDone 
+							+ " damage! Enemy HP: " + enemy.getHealth());
+				}
+				else
+				{
+					System.out.println("Player has no skill to use.");
+				}
 			}
 			turn = "Enemy";
 		}

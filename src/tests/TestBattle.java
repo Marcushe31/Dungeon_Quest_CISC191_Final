@@ -27,11 +27,20 @@ import java.io.ByteArrayInputStream;
 import java.util.Scanner;
 
 import org.junit.jupiter.api.Test;
+
 import Default.Battle;
 import Default.BattleController;
 import Default.BattleScannerInput;
+import Default.Door;
+import Default.DoorFactory;
+import Default.Dungeon;
+import Default.DungeonController;
+import Default.DungeonScannerInput;
 import Default.Enemy;
+import Default.Item;
+import Default.Mage;
 import Default.Player;
+import Default.Warrior;
 
 /**
  * Purpose: The reponsibility of TestBattle is ...
@@ -43,7 +52,7 @@ class TestBattle
 {
 
 	@Test
-	void test()
+	void testBasicBattleTurnFlow()
 	{
 		// fail("Not yet implemented");
 
@@ -149,6 +158,154 @@ class TestBattle
 			String action = inputHandler.getPlayerAction(scanner);
 
 			assertEquals("block", action);
+
+			scanner.close();
+		}
+		
+		@Test
+		void testDoorStoresEnemyEvent()
+		{
+			Enemy enemy = new Enemy("Goblin", 60, 30, 10);
+
+			Door door = new Door("enemy", enemy, null);
+
+			assertEquals("enemy", door.getEventType());
+			assertEquals(enemy, door.getEnemy());
+			assertNull(door.getItem());
+		}
+
+		@Test
+		void testDoorStoresRewardEvent()
+		{
+			Item item = new Item("Health Potion", 25);
+
+			Door door = new Door("reward", null, item);
+
+			assertEquals("reward", door.getEventType());
+			assertNull(door.getEnemy());
+			assertEquals(item, door.getItem());
+		}
+
+		@Test
+		void testDoorFactoryGeneratesThreeDoors()
+		{
+			DoorFactory doorFactory = new DoorFactory();
+
+			Door[] doors = doorFactory.generateDoors();
+
+			assertEquals(3, doors.length);
+			assertNotNull(doors[0]);
+			assertNotNull(doors[1]);
+			assertNotNull(doors[2]);
+		}
+
+		@Test
+		void testDungeonGeneratesDoors()
+		{
+			Dungeon dungeon = new Dungeon();
+
+			dungeon.generateDoors();
+
+			Door[] doors = dungeon.getDoors();
+
+			assertEquals(3, doors.length);
+			assertNotNull(doors[0]);
+			assertNotNull(doors[1]);
+			assertNotNull(doors[2]);
+		}
+
+		@Test
+		void testDungeonChooseDoor()
+		{
+			Dungeon dungeon = new Dungeon();
+
+			dungeon.generateDoors();
+
+			Door selectedDoor = dungeon.chooseDoor(1);
+
+			assertNotNull(selectedDoor);
+			assertEquals(dungeon.getDoors()[0], selectedDoor);
+		}
+
+		@Test
+		void testDungeonStageStartsAtOneAndIncrements()
+		{
+			Dungeon dungeon = new Dungeon();
+
+			assertEquals(1, dungeon.getStage());
+
+			dungeon.nextStage();
+
+			assertEquals(2, dungeon.getStage());
+		}
+
+		@Test
+		void testDungeonControllerGeneratesDoorsAndChoosesDoor()
+		{
+			Dungeon dungeon = new Dungeon();
+
+			DungeonController dungeonController =
+					new DungeonController(dungeon);
+
+			dungeonController.generateDoors();
+
+			Door selectedDoor =
+					dungeonController.handleDoorChoice(1);
+
+			assertNotNull(selectedDoor);
+			assertEquals(dungeon.getDoors()[0], selectedDoor);
+		}
+
+		@Test
+		void testDungeonScannerInputValidChoice()
+		{
+			String input = "2\n";
+
+			ByteArrayInputStream testInput =
+					new ByteArrayInputStream(input.getBytes());
+
+			Scanner scanner = new Scanner(testInput);
+
+			Dungeon dungeon = new Dungeon();
+
+			DungeonController dungeonController =
+					new DungeonController(dungeon);
+
+			Player player = new Warrior();
+
+			DungeonScannerInput dungeonScannerInput =
+					new DungeonScannerInput(dungeonController, player);
+
+			int choice = dungeonScannerInput.getDoorChoice(scanner);
+
+			assertEquals(2, choice);
+
+			scanner.close();
+		}
+
+		@Test
+		void testDungeonScannerInputInvalidThenValidChoice()
+		{
+			String input = "hello\n3\n";
+
+			ByteArrayInputStream testInput =
+					new ByteArrayInputStream(input.getBytes());
+
+			Scanner scanner = new Scanner(testInput);
+
+			Dungeon dungeon = new Dungeon();
+
+			DungeonController dungeonController =
+					new DungeonController(dungeon);
+
+			Player player = new Warrior();
+
+			DungeonScannerInput dungeonScannerInput =
+					new DungeonScannerInput(dungeonController, player);
+
+			int choice = dungeonScannerInput.getDoorChoice(scanner);
+
+			assertEquals(3, choice);
 
 			scanner.close();
 		}
