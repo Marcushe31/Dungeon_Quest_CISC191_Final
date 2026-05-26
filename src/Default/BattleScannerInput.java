@@ -46,7 +46,7 @@ public class BattleScannerInput
 		{
 			if (battle.getTurn().equals("Player"))
 			{
-				System.out.println("\nYour Turn! Choose (attack / block / skill): ");
+				System.out.println("\nYour Turn! Choose (attack / block / skill / item): ");
 				String action = getPlayerAction(scanner);
 				battleController.handlePlayerAction(action);
 			}
@@ -63,9 +63,10 @@ public class BattleScannerInput
 	{
 		String action = scanner.nextLine().trim().toLowerCase();
 		
-		while (!action.equals("attack") && !action.equals("block") && !action.equals("skill"))
+		while (!action.equals("attack") && !action.equals("block")
+				&& !action.equals("skill") && !action.equals("item"))
 		{
-			System.out.println("Invalid action. Type 'attack', 'block', or 'skill'.");
+			System.out.println("Invalid action. Type 'attack', 'block', 'skill', or 'item'.");
 			action = scanner.nextLine().trim().toLowerCase();
 		}
 		

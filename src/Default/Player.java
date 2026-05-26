@@ -32,11 +32,17 @@ public class Player
 	private int stamina;
 	private int damage;
 	private ArrayList<Skill> skills;
+	private ArrayList<Item> inventory;
 
 	
 	public void addSkill(Skill skill)
 	{
 		skills.add(skill);
+	}
+
+	public void addItem(Item item)
+	{
+		inventory.add(item);
 	}
 	
 	// each profession has their own skill, which depends on the
@@ -50,10 +56,26 @@ public class Player
 		return skills.size();
 	}
 
+	public Item getItem(int index)
+	{
+		return inventory.get(index);
+	}
+
+	public int getItemCount()
+	{
+		return inventory.size();
+	}
+
+	public Item removeItem(int index)
+	{
+		return inventory.remove(index);
+	}
+
 	public Player( String characterClass, int health, int mana, int stamina,
 			int damage)
 	{
 		this.skills = new ArrayList<Skill>();
+		this.inventory = new ArrayList<Item>();
 		this.characterClass = characterClass;
 		this.health = health;
 		this.mana = mana;
@@ -77,6 +99,20 @@ public class Player
 		}
 		// System.out.println("Player takes " + damage + " damage! Remaining
 		// health: " + health);
+	}
+
+	public void heal(int amount)
+	{
+		if (amount > 0)
+		{
+			health += amount;
+		}
+	}
+
+	public void useItem(int index)
+	{
+		Item item = removeItem(index);
+		item.use(this);
 	}
 
 	public boolean isAlive()

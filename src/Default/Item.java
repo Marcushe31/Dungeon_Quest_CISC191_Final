@@ -45,4 +45,12 @@ public class Item
 	{
 		return effect;
 	}
+
+	public void use(Player player)
+	{
+		if (itemType.equals("Health Potion"))
+		{
+			player.heal(effect);
+		}
+	}
 }

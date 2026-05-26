@@ -92,6 +92,20 @@ public class Battle
 					System.out.println("Player has no skill to use.");
 				}
 			}
+			else if (action.equals("item"))
+			{
+				if (player.getItemCount() > 0)
+				{
+					Item item = player.getItem(0);
+					player.useItem(0);
+					System.out.println("Player uses " + item.getItemType()
+							+ ". Player HP: " + player.getHealth());
+				}
+				else
+				{
+					System.out.println("Player has no items to use.");
+				}
+			}
 			turn = "Enemy";
 		}
 		else

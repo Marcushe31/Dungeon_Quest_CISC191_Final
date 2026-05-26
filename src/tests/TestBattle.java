@@ -187,6 +187,72 @@ class TestBattle
 		}
 
 		@Test
+		void testHealthPotionHealsPlayer()
+		{
+			Player player = new Warrior();
+			Item item = new Item("Health Potion", 25);
+
+			player.takeDamage(40);
+			item.use(player);
+
+			assertEquals(105, player.getHealth());
+		}
+
+		@Test
+		void testPlayerStoresItemsInInventory()
+		{
+			Player player = new Warrior();
+			Item item = new Item("Health Potion", 25);
+
+			player.addItem(item);
+
+			assertEquals(1, player.getItemCount());
+			assertEquals(item, player.getItem(0));
+		}
+
+		@Test
+		void testPlayerUsesHealthPotionFromInventory()
+		{
+			Player player = new Warrior();
+			Item item = new Item("Health Potion", 25);
+
+			player.takeDamage(40);
+			player.addItem(item);
+			player.useItem(0);
+
+			assertEquals(105, player.getHealth());
+			assertEquals(0, player.getItemCount());
+		}
+
+		@Test
+		void testScannerItemInput()
+		{
+			String input = "item\n";
+
+			ByteArrayInputStream testInput = new ByteArrayInputStream(
+					input.getBytes());
+
+			Scanner scanner = new Scanner(testInput);
+
+			Player player = new Player("Warrior", 100, 50, 50, 15);
+
+			Enemy enemy = new Enemy("Goblin", 60, 30, 10);
+
+			Battle battle = new Battle(player, enemy);
+
+			BattleController controller = new BattleController(battle);
+
+			BattleScannerInput inputHandler = new BattleScannerInput(battle,
+					controller);
+
+			String action = inputHandler.getPlayerAction(scanner);
+
+			assertEquals("item", action);
+
+			scanner.close();
+		}
+
+		@Test
 		void testDoorFactoryGeneratesThreeDoors()
 		{
 			DoorFactory doorFactory = new DoorFactory();

@@ -114,6 +114,9 @@ public class DungeonScannerInput
 			System.out.println("\nYou found a reward chest!");
 
 			System.out.println("You received: " + door.getItem().getItemType());
+			player.addItem(door.getItem());
+			System.out.println("Item added to inventory. Items: "
+					+ player.getItemCount());
 		}
 		else
 		{
