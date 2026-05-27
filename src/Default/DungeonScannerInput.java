@@ -42,9 +42,8 @@ public class DungeonScannerInput
 	public void runDungeon()
 	{
 		Scanner scanner = new Scanner(System.in);
-		boolean gameRunning = true;
 
-		while (gameRunning && player.isAlive())
+		while (dungeonController.isGameRunning() && player.isAlive())
 		{
 			System.out.println("\n========== Stage " + dungeonController.getStage() + " ==========");
 
@@ -57,8 +56,11 @@ public class DungeonScannerInput
 			Door selectedDoor = dungeonController.handleDoorChoice(choice);
 
 			handleDoorEvent(selectedDoor);
-
-			dungeonController.moveToNextStage();
+			
+			if (dungeonController.isGameRunning() && player.isAlive())
+			{
+				dungeonController.moveToNextStage();
+			}
 		}
 
 		System.out.println("\nDungeon run ended.");
@@ -115,6 +117,17 @@ public class DungeonScannerInput
 
 			battle.startBattle();
 			battleScannerInput.runBattle();
+			
+			if (!player.isAlive())
+			{
+				dungeonController.endGame();
+			}
+			else if (door.getEventType().equals("boss"))
+			{
+				System.out.println("\nYou Defeated the Dragon Boss");
+				System.out.println("You Cleared the Dungeon. You Win!");
+				dungeonController.endGame();
+			}
 		}
 		else if (door.getEventType().equals("reward"))
 		{

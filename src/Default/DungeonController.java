@@ -34,6 +34,7 @@ public class DungeonController
 	public DungeonController(Dungeon dungeon)
 	{
 		this.dungeon = dungeon;
+		this.gameRunning = true;
 	}
 
 	public void generateDoors()
@@ -59,6 +60,11 @@ public class DungeonController
 	public Door[] getDoors()
 	{
 		return dungeon.getDoors();
+	}
+	
+	public boolean isGameRunning()
+	{
+		return gameRunning;
 	}
 	
 	public void endGame()

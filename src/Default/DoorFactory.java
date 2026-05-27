@@ -90,7 +90,7 @@ public class DoorFactory
 		
 	public Door generateBossDoor()
 	{
-		Enemy boss = new Enemy("Dragon", 150, 50, 25);
+		Enemy boss = new Enemy("Dragon", 100, 50, 25);
 		return new Door("boss", boss, null);
 	}
 }
