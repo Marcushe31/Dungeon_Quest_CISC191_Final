@@ -16,7 +16,7 @@
  */
 package Default;
 
-import java.util.Scanner;
+//import java.util.Scanner;
 
 /**
  * Purpose: The responsibility of Main is ...
@@ -28,35 +28,41 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		Scanner scanner = new Scanner(System.in);
+		GameManager gameManager =
+				new GameManager();
+
+		gameManager.startGame();
 		
-		System.out.println("Choose your Profession (Select Number):");
-		System.out.println("1. Warrior");
-		System.out.println("2. Mage");
-		System.out.println("3. Archer");
-		System.out.println("Enter Here:");
-		
-		String choice = scanner.nextLine().trim();
-		
-		Player player;
-		
-		if (choice.equals("1"))
-		{
-			player = new Warrior();
-		}
-		else if (choice.equals("2"))
-		{
-			player = new Mage();
-		}
-		else if (choice.equals("3"))
-		{
-			player = new Archer();
-		}
-		else
-		{
-			System.out.println("Not VALID Profession. Defaulting to Warrior");
-			player = new Warrior();
-		}
+		// Moved to GameManager Class
+//		Scanner scanner = new Scanner(System.in);
+//		
+//		System.out.println("Choose your Profession (Select Number):");
+//		System.out.println("1. Warrior");
+//		System.out.println("2. Mage");
+//		System.out.println("3. Archer");
+//		System.out.println("Enter Here:");
+//		
+//		String choice = scanner.nextLine().trim();
+//		
+//		Player player;
+//		
+//		if (choice.equals("1"))
+//		{
+//			player = new Warrior();
+//		}
+//		else if (choice.equals("2"))
+//		{
+//			player = new Mage();
+//		}
+//		else if (choice.equals("3"))
+//		{
+//			player = new Archer();
+//		}
+//		else
+//		{
+//			System.out.println("Not VALID Profession. Defaulting to Warrior");
+//			player = new Warrior();
+//		}
 		
 //		Player player = new Player("Mage", 100, 50, 50, 10);
 //		Enemy enemy = new Enemy("Goblin", 60, 30, 10);
@@ -69,10 +75,11 @@ public class Main
 //		battle.startBattle();
 //		battleScannerInput.runBattle();
 		
-		Dungeon dungeon = new Dungeon();
-		DungeonController dungeonController = new DungeonController(dungeon);
-		DungeonScannerInput dungeonScannerInput = new DungeonScannerInput(dungeonController, player);
-
-		dungeonScannerInput.runDungeon();
+		// Moved to GameManager Class
+//		Dungeon dungeon = new Dungeon();
+//		DungeonController dungeonController = new DungeonController(dungeon);
+//		DungeonScannerInput dungeonScannerInput = new DungeonScannerInput(dungeonController, player);
+//
+//		dungeonScannerInput.runDungeon();
 	}
 }
