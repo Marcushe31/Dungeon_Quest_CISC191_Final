@@ -87,4 +87,10 @@ public class DoorFactory
 			return new Enemy("Skeleton", 80, 40, 15);
 		}
 	}
+		
+	public Door generateBossDoor()
+	{
+		Enemy boss = new Enemy("Dragon", 150, 50, 25);
+		return new Door("boss", boss, null);
+	}
 }

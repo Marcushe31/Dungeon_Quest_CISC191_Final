@@ -91,9 +91,16 @@ public class DungeonScannerInput
 
 	private void handleDoorEvent(Door door)
 	{
-		if (door.getEventType().equals("enemy"))
+		if (door.getEventType().equals("enemy") || door.getEventType().equals("boss"))
 		{
-			System.out.println("\nAn enemy appeared!");
+			if (door.getEventType().equals("boss"))
+			{
+				System.out.println("\nThe Dragon Boss appeared!");
+			}
+			else
+			{
+				System.out.println("\nAn enemy appeared!");
+			}
 
 			Battle battle =
 					new Battle(player, door.getEnemy());

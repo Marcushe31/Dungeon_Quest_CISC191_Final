@@ -29,6 +29,7 @@ package Default;
 public class DungeonController
 {
 	private Dungeon dungeon;
+	private boolean gameRunning;
 
 	public DungeonController(Dungeon dungeon)
 	{
@@ -58,5 +59,10 @@ public class DungeonController
 	public Door[] getDoors()
 	{
 		return dungeon.getDoors();
+	}
+	
+	public void endGame()
+	{
+		gameRunning = false;
 	}
 }

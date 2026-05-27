@@ -19,8 +19,6 @@
 */
 package Default;
 
-import java.util.Random;
-
 
 /**
  * Purpose: The responsibility of Dungeon is ...
@@ -33,6 +31,12 @@ public class Dungeon
 	private Door[] doors;
 	private int stage;
 	private DoorFactory doorFactory;
+	private final int FINAL_STAGE = 5;
+	
+	public boolean isFinalStage()
+	{
+		return stage == FINAL_STAGE;
+	}
 
 	public Dungeon()
 	{
@@ -43,7 +47,16 @@ public class Dungeon
 
 	public void generateDoors()
 	{
-		doors = doorFactory.generateDoors();
+		if (isFinalStage())
+		{
+			doors[0] = doorFactory.generateBossDoor();
+			doors[1] = new Door("nothing", null, null);
+			doors[2] = new Door("nothing", null, null);
+		}
+		 else
+		 {
+			 doors = doorFactory.generateDoors();
+		 }
 	}
 
 	public Door chooseDoor(int doorNumber)
