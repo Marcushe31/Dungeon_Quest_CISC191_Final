@@ -52,6 +52,11 @@ public class DungeonController
 		dungeon.nextStage();
 	}
 
+	public Dungeon getDungeon()
+	{
+		return dungeon;
+	}
+	
 	public int getStage()
 	{
 		return dungeon.getStage();

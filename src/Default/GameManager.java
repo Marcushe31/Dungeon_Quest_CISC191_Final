@@ -33,25 +33,71 @@ public class GameManager
 	private Dungeon dungeon;
 	private DungeonController dungeonController;
 	private DungeonScannerInput dungeonScannerInput;
+	private SaveManager saveManager;
+	
+	public GameManager()
+	{
+		saveManager = new SaveManager();
+	}
 
 	public void startGame()
 	{
 		Scanner scanner =
 				new Scanner(System.in);
 
+		System.out.println("1. New Game");
+		System.out.println("2. Load Game");
+		System.out.print("--> ");
+
+		String choice = scanner.nextLine().trim();
+
+		if (choice.equals("2"))
+		{
+			GameSave save = saveManager.loadGame();
+
+			if (save == null)
+			{
+				return;
+			}
+
+			if (save.getCharacterClass().equals("Warrior"))
+			{
+				player = new Warrior();
+			}
+			else if (save.getCharacterClass().equals("Mage"))
+			{
+				player = new Mage();
+			}
+			else if (save.getCharacterClass().equals("Archer"))
+			{
+				player = new Archer();
+			}
+
+			player.setHealth(save.getHealth());
+
+			dungeon = new Dungeon();
+			dungeon.setStage(save.getStage());
+
+			dungeonController = new DungeonController(dungeon);
+
+			dungeonScannerInput = new DungeonScannerInput(dungeonController, player);
+
+			dungeonScannerInput.runDungeon();
+
+			return;
+		}
+
 		player = chooseProfession(scanner);
 
 		dungeon = new Dungeon();
 
-		dungeonController =
-				new DungeonController(dungeon);
+		dungeonController = new DungeonController(dungeon);
 
-		dungeonScannerInput =
-				new DungeonScannerInput(
-						dungeonController,
-						player);
+		dungeonScannerInput = new DungeonScannerInput(dungeonController, player);
 
 		dungeonScannerInput.runDungeon();
+
+		saveManager.saveGame(player, dungeon);
 	}
 
 	private Player chooseProfession(Scanner scanner)
@@ -86,8 +132,7 @@ public class GameManager
 			}
 			else
 			{
-				System.out.println(
-						"Invalid choice.");
+				System.out.println("Invalid choice.");
 			}
 		}
 

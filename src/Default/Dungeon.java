@@ -50,8 +50,8 @@ public class Dungeon
 		if (isFinalStage())
 		{
 			doors[0] = doorFactory.generateBossDoor();
-			doors[1] = new Door("nothing", null, null);
-			doors[2] = new Door("nothing", null, null);
+			doors[1] = doorFactory.generateBossDoor();
+			doors[2] = doorFactory.generateBossDoor();
 		}
 		 else
 		 {
@@ -77,6 +77,11 @@ public class Dungeon
 	public void nextStage()
 	{
 		stage++;
+	}
+	
+	public void setStage(int stage)
+	{
+		this.stage = stage;
 	}
 }
 

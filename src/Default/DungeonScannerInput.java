@@ -32,11 +32,13 @@ public class DungeonScannerInput
 {
 	private DungeonController dungeonController;
 	private Player player;
+	private SaveManager saveManager;
 
 	public DungeonScannerInput(DungeonController dungeonController, Player player)
 	{
 		this.dungeonController = dungeonController;
 		this.player = player;
+		this.saveManager = new SaveManager();
 	}
 
 	public void runDungeon()
@@ -53,10 +55,15 @@ public class DungeonScannerInput
 
 			int choice = getDoorChoice(scanner);
 
-			Door selectedDoor = dungeonController.handleDoorChoice(choice);
+			if (choice == 4)
+			{
+				saveManager.saveGame(player, dungeonController.getDungeon());
+				continue;
+			}
 
+			Door selectedDoor = dungeonController.handleDoorChoice(choice);
 			handleDoorEvent(selectedDoor);
-			
+
 			if (dungeonController.isGameRunning() && player.isAlive())
 			{
 				dungeonController.moveToNextStage();
@@ -68,10 +75,11 @@ public class DungeonScannerInput
 
 	public void displayDoors()
 	{
-		System.out.println("Choose a door:");
+		System.out.println("Choose an option:");
 		System.out.println("1. Door 1");
 		System.out.println("2. Door 2");
 		System.out.println("3. Door 3");
+		System.out.println("4. Save Game");
 		System.out.print("--> ");
 	}
 
@@ -81,9 +89,10 @@ public class DungeonScannerInput
 
 		while (!input.equals("1")
 				&& !input.equals("2")
-				&& !input.equals("3"))
+				&& !input.equals("3")
+				&& !input.equals("4"))
 		{
-			System.out.println("Invalid choice. Choose 1, 2, or 3.");
+			System.out.println("Invalid choice. Choose 1, 2, 3, or 4.");
 			System.out.print("--> ");
 			input = scanner.nextLine().trim();
 		}
