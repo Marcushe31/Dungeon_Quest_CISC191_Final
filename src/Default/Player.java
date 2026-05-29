@@ -19,15 +19,16 @@ package Default;
 import java.util.ArrayList;
 
 /**
- * Purpose: The reponsibility of Player is ...
+ * Purpose: Player holds all the stats and inventory for a playable character.
+ * Subclasses (Archer, Mage, Warrior) set their own starting values.
  *
- * Player is-a ...
- * Player is ...
+ * Player is a base class extended by each character class.
  */
 public class Player
 {
 	private String characterClass;
 	private int health;
+	private int maxHealth;
 	private int mana;
 	private int stamina;
 	private int damage;
@@ -71,13 +72,23 @@ public class Player
 		return inventory.remove(index);
 	}
 
-	public Player( String characterClass, int health, int mana, int stamina,
-			int damage)
+	/**
+	 * Creates a Player with the given stats. maxHealth is set from the starting health value.
+	 *
+	 * @param characterClass the player's class name (e.g. "Archer")
+	 * @param health starting and max health
+	 * @param mana starting mana
+	 * @param stamina starting stamina
+	 * @param damage base attack damage
+	 */
+	public Player(String characterClass, int health, int mana, int stamina, int damage)
 	{
 		this.skills = new ArrayList<Skill>();
 		this.inventory = new ArrayList<Item>();
 		this.characterClass = characterClass;
 		this.health = health;
+		// save max so we can cap healing later
+		this.maxHealth = health;
 		this.mana = mana;
 		this.stamina = stamina;
 		this.damage = damage;
@@ -101,11 +112,21 @@ public class Player
 		// health: " + health);
 	}
 
+	/**
+	 * Heals the player by the given amount without going over maxHealth.
+	 *
+	 * @param amount how much health to restore
+	 */
 	public void heal(int amount)
 	{
 		if (amount > 0)
 		{
 			health += amount;
+			// dont let health go above the max
+			if (health > maxHealth)
+			{
+				health = maxHealth;
+			}
 		}
 	}
 
@@ -120,9 +141,24 @@ public class Player
 		return health > 0;
 	}
 
+	/**
+	 * Returns the player's current health.
+	 *
+	 * @return current health
+	 */
 	public int getHealth()
 	{
 		return health;
+	}
+
+	/**
+	 * Returns the player's max health.
+	 *
+	 * @return max health
+	 */
+	public int getMaxHealth()
+	{
+		return maxHealth;
 	}
 
 	public int getDamage()

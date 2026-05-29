@@ -16,23 +16,34 @@
 package Default;
 
 /**
- * Purpose: The reponsibility of Enemy is ...
+ * Purpose: Enemy holds the stats for any enemy the player fights.
+ * isBoss can be set to flag a boss encounter.
  *
- * Enemy is-a ...
- * Enemy is ...
+ * Enemy is a model class used by Battle.
  */
 public class Enemy
 {
 	private String enemyType;
 	private int health;
+	private int maxHealth;
 	private int stamina;
 	private boolean isBoss;
 	private int damage;
-	
+
+	/**
+	 * Creates an Enemy with the given stats. maxHealth is set from the starting health value.
+	 *
+	 * @param enemyType name of the enemy (e.g. "Goblin")
+	 * @param health starting and max health
+	 * @param stamina starting stamina
+	 * @param damage base attack damage
+	 */
 	public Enemy(String enemyType, int health, int stamina, int damage)
 	{
 		this.enemyType = enemyType;
 		this.health = health;
+		// save max so the view can show a health bar later
+		this.maxHealth = health;
 		this.stamina = stamina;
 		this.damage = damage;
 	}
@@ -58,11 +69,26 @@ public class Enemy
 		return health > 0;
 	}
 	
+	/**
+	 * Returns the enemy's current health.
+	 *
+	 * @return current health
+	 */
 	public int getHealth()
 	{
 		return health;
 	}
-	
+
+	/**
+	 * Returns the enemy's max health.
+	 *
+	 * @return max health
+	 */
+	public int getMaxHealth()
+	{
+		return maxHealth;
+	}
+
 	public int getDamage()
 	{
 		return damage;
