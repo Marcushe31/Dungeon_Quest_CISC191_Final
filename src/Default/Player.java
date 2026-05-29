@@ -134,4 +134,9 @@ public class Player
 	{
 		return characterClass;
 	}
+	
+	public void setHealth(int health)
+	{
+		this.health = health;
+	}
 }
