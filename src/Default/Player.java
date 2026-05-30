@@ -46,10 +46,21 @@ public class Player
 		inventory.add(item);
 	}
 	
-	// each profession has their own skill, which depends on the
-	// index of the arraylist<Skill>
+	/**
+	 * Returns the skill at the given index.
+	 * Returns null if the index is out of range.
+	 *
+	 * @param index position in the skills list
+	 * @return the skill, or null if index is invalid
+	 */
+	// each profession has their own skill, which depends on the index of the ArrayList
 	public Skill getSkill(int index) {
-		return skills.get(index);
+		try {
+			return skills.get(index);
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println("No skill at that index.");
+			return null;
+		}
 	}
 	
 	public int getSkillCount()
@@ -57,9 +68,21 @@ public class Player
 		return skills.size();
 	}
 
+	/**
+	 * Returns the item at the given index.
+	 * Returns null if the index is out of range.
+	 *
+	 * @param index position in the inventory list
+	 * @return the item, or null if index is invalid
+	 */
 	public Item getItem(int index)
 	{
-		return inventory.get(index);
+		try {
+			return inventory.get(index);
+		} catch (IndexOutOfBoundsException e) {
+			System.out.println("No item at that index.");
+			return null;
+		}
 	}
 
 	public int getItemCount()
