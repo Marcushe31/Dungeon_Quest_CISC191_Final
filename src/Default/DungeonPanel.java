@@ -42,6 +42,7 @@ public class DungeonPanel extends JPanel
 	private GameManagerView gameManager;
 
 	private JLabel stageLabel;
+	private JLabel enemyCountLabel;
 	private JProgressBar hpBar;
 	private JProgressBar manaBar;
 	private JProgressBar staminaBar;
@@ -70,17 +71,24 @@ public class DungeonPanel extends JPanel
 		add(buildStats(), BorderLayout.SOUTH);
 	}
 
-	// shows the stage number across the top
+	// shows the stage number and enemy kill progress across the top
 	private JPanel buildTopBar()
 	{
-		JPanel top = new JPanel();
+		JPanel top = new JPanel(new BorderLayout());
 		top.setBackground(GuiStyle.BACKGROUND);
-		top.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+		top.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
 
-		stageLabel = new JLabel("Stage 1");
+		stageLabel = new JLabel("Stage 1", SwingConstants.CENTER);
 		stageLabel.setForeground(GuiStyle.TEXT);
 		stageLabel.setFont(GuiStyle.TITLE_FONT);
-		top.add(stageLabel);
+
+		// shows how close the player is to the boss
+		enemyCountLabel = new JLabel("Enemies: 0 / 3", SwingConstants.RIGHT);
+		enemyCountLabel.setForeground(GuiStyle.WARRIOR_RED);
+		enemyCountLabel.setFont(GuiStyle.TEXT_FONT);
+
+		top.add(stageLabel, BorderLayout.CENTER);
+		top.add(enemyCountLabel, BorderLayout.EAST);
 		return top;
 	}
 
@@ -247,10 +255,12 @@ public class DungeonPanel extends JPanel
 	 *
 	 * @param player the current player
 	 * @param stage the current stage number
+	 * @param enemiesDefeated how many enemies beaten so far this run
 	 */
-	public void refresh(Player player, int stage)
+	public void refresh(Player player, int stage, int enemiesDefeated)
 	{
 		stageLabel.setText("Stage " + stage);
+		enemyCountLabel.setText("Enemies: " + enemiesDefeated + " / 3");
 
 		// reset event area for the new stage
 		eventLabel.setVisible(false);

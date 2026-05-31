@@ -56,26 +56,22 @@ public class Dungeon
 	}
 
 	/**
-	 * Generates the 3 doors for the current stage and records their event
-	 * types in the dungeonMap for that stage row.
+	 * Generates 3 random doors for the current stage and records them in the map.
+	 * Boss triggering is handled by GameManagerView based on enemies defeated,
+	 * not by stage number.
 	 */
 	public void generateDoors()
 	{
-		if (isFinalStage())
-		{
-			doors[0] = doorFactory.generateBossDoor();
-			doors[1] = doorFactory.generateBossDoor();
-			doors[2] = doorFactory.generateBossDoor();
-		}
-		else
-		{
-			doors = doorFactory.generateDoors();
-		}
+		doors = doorFactory.generateDoors();
 
-		// save the event type for each door in the map so we can look it up later
+		// record what's behind each door in the 2D map for this stage
 		for (int i = 0; i < doors.length; i++)
 		{
-			dungeonMap[stage - 1][i] = doors[i].getEventType();
+			// guard against going past the map size if stages run long
+			if (stage - 1 < dungeonMap.length)
+			{
+				dungeonMap[stage - 1][i] = doors[i].getEventType();
+			}
 		}
 	}
 

@@ -29,8 +29,8 @@ public class Archer extends Player
 {
 	public Archer()
 	{
-		// health mana stamina damage
-		super("Archer", 100, 50, 70, 15);
+		// health mana stamina damage -- more mana so DoubleShot can be used more
+		super("Archer", 130, 80, 70, 18);
 		addSkill(new DoubleShot());
 	}
 

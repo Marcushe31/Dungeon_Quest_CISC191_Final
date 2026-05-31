@@ -49,6 +49,8 @@ public class GameManagerView extends JFrame
 	private Battle battle;
 	private BattleController battleController;
 	private boolean bossBattle;
+	// tracks how many regular enemies the player has beaten this run
+	private int enemiesDefeated;
 
 	/**
 	 * Builds the window, sets up all the screens, and shows the home screen.
@@ -103,6 +105,8 @@ public class GameManagerView extends JFrame
 		this.player = chosenPlayer;
 		this.dungeon = new Dungeon();
 		this.dungeonController = new DungeonController(dungeon);
+		// reset kill counter for a fresh run
+		this.enemiesDefeated = 0;
 		enterDungeon();
 	}
 
@@ -124,6 +128,8 @@ public class GameManagerView extends JFrame
 		this.dungeon = new Dungeon();
 		dungeon.setStage(save.getStage());
 		this.dungeonController = new DungeonController(dungeon);
+		// reset counter on load -- player has to earn the boss again
+		this.enemiesDefeated = 0;
 
 		enterDungeon();
 	}
@@ -152,6 +158,7 @@ public class GameManagerView extends JFrame
 
 	/**
 	 * Makes a fresh set of doors and shows the dungeon screen.
+	 * If 3 enemies have already been defeated, skips straight to the boss.
 	 */
 	public void enterDungeon()
 	{
@@ -159,8 +166,18 @@ public class GameManagerView extends JFrame
 		{
 			return;
 		}
+
+		// once 3 enemies are down, force the boss encounter
+		if (enemiesDefeated >= 3)
+		{
+			DoorFactory factory = new DoorFactory();
+			Door bossDoor = factory.generateBossDoor();
+			startBattle(bossDoor.getEnemy(), true);
+			return;
+		}
+
 		dungeonController.generateDoors();
-		dungeonPanel.refresh(player, dungeonController.getStage());
+		dungeonPanel.refresh(player, dungeonController.getStage(), enemiesDefeated);
 		showScreen("dungeon");
 	}
 
@@ -237,7 +254,8 @@ public class GameManagerView extends JFrame
 		}
 		else
 		{
-			// won a normal fight, keep going deeper into the dungeon
+			// count the kill then move on, boss triggers automatically at 3
+			enemiesDefeated++;
 			dungeonController.moveToNextStage();
 			enterDungeon();
 		}

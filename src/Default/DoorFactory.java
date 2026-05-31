@@ -55,13 +55,12 @@ public class DoorFactory
 		if (randomEvent == 0)
 		{
 			Enemy enemy = generateEnemy();
-
 			return new Door("enemy", enemy, null);
 		}
 		else if (randomEvent == 1)
 		{
-			Item item = new Item("Health Potion", 25);
-
+			// bumped to 50 so rewards actually matter mid-run
+			Item item = new Item("Health Potion", 50);
 			return new Door("reward", null, item);
 		}
 		else
@@ -76,21 +75,31 @@ public class DoorFactory
 
 		if (randomEnemy == 0)
 		{
-			return new Enemy("Rat", 30, 20, 5);
+			// Rat: easy warmup fight
+			return new Enemy("Rat", 35, 20, 6);
 		}
 		else if (randomEnemy == 1)
 		{
-			return new Enemy("Goblin", 60, 30, 10);
+			// Goblin: medium threat
+			return new Enemy("Goblin", 65, 30, 11);
 		}
 		else
 		{
-			return new Enemy("Skeleton", 80, 40, 15);
+			// Skeleton: hardest regular enemy
+			return new Enemy("Skeleton", 90, 40, 16);
 		}
 	}
-		
+
+	/**
+	 * Generates the boss door. Called by GameManagerView once 3 enemies are down.
+	 * Dragon is tough but beatable if the player uses skills and items well.
+	 *
+	 * @return a boss door with the Dragon enemy
+	 */
 	public Door generateBossDoor()
 	{
-		Enemy boss = new Enemy("Dragon", 100, 50, 25);
+		// 150 HP and 20 dmg -- dangerous but not a one-shot machine
+		Enemy boss = new Enemy("Dragon", 150, 50, 20);
 		return new Door("boss", boss, null);
 	}
 }
