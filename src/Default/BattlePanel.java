@@ -68,6 +68,9 @@ public class BattlePanel extends JPanel
 	private JButton blockButton;
 	// only shows up once the fight is over
 	private JButton continueButton;
+	// always visible so the player can bail or save at any point
+	private JButton saveQuitButton;
+	private JButton quitHomeButton;
 
 	/**
 	 * Builds the battle screen layout.
@@ -214,9 +217,39 @@ public class BattlePanel extends JPanel
 			}
 		});
 
+		// saves current HP and stage then returns to the title screen
+		saveQuitButton = new JButton("SAVE & QUIT");
+		GuiStyle.styleButton(saveQuitButton);
+		saveQuitButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				gameManager.saveGame();
+				gameManager.goHome();
+			}
+		});
+
+		// returns home without saving
+		quitHomeButton = new JButton("QUIT TO HOME");
+		GuiStyle.styleButton(quitHomeButton);
+		quitHomeButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				gameManager.goHome();
+			}
+		});
+
+		// bottom row holds the quit buttons and the post-battle continue button
+		JPanel bottomRow = new JPanel(new GridLayout(1, 3, 6, 6));
+		bottomRow.setBackground(GuiStyle.PANEL);
+		bottomRow.add(saveQuitButton);
+		bottomRow.add(quitHomeButton);
+		bottomRow.add(continueButton);
+
 		area.add(promptLabel, BorderLayout.NORTH);
 		area.add(buttons, BorderLayout.CENTER);
-		area.add(continueButton, BorderLayout.SOUTH);
+		area.add(bottomRow, BorderLayout.SOUTH);
 		return area;
 	}
 

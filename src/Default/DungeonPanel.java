@@ -185,7 +185,7 @@ public class DungeonPanel extends JPanel
 		}
 	}
 
-	// the stat bars plus the save button along the bottom
+	// the stat bars plus the action buttons along the bottom
 	private JPanel buildStats()
 	{
 		JPanel stats = new JPanel(new GridLayout(4, 1, 4, 4));
@@ -200,6 +200,10 @@ public class DungeonPanel extends JPanel
 		stats.add(manaBar);
 		stats.add(staminaBar);
 
+		// put save and home side by side in the last row
+		JPanel buttonRow = new JPanel(new GridLayout(1, 2, 6, 6));
+		buttonRow.setBackground(GuiStyle.PANEL);
+
 		JButton saveButton = new JButton("SAVE GAME");
 		GuiStyle.styleButton(saveButton);
 		saveButton.addActionListener(new ActionListener()
@@ -209,7 +213,20 @@ public class DungeonPanel extends JPanel
 				gameManager.saveGame();
 			}
 		});
-		stats.add(saveButton);
+
+		JButton homeButton = new JButton("QUIT TO HOME");
+		GuiStyle.styleButton(homeButton);
+		homeButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				gameManager.goHome();
+			}
+		});
+
+		buttonRow.add(saveButton);
+		buttonRow.add(homeButton);
+		stats.add(buttonRow);
 
 		return stats;
 	}
