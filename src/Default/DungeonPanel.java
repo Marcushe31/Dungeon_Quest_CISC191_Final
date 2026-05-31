@@ -27,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
 
 /**
  * Purpose: DungeonPanel is the dungeon exploration screen (a View). It shows
@@ -44,6 +45,13 @@ public class DungeonPanel extends JPanel
 	private JProgressBar hpBar;
 	private JProgressBar manaBar;
 	private JProgressBar staminaBar;
+
+	// keep a reference to all 3 door buttons so we can enable/disable them together
+	private JButton[] doorButtons;
+
+	// shows what happened behind the door before the player moves on
+	private JLabel eventLabel;
+	private JButton continueButton;
 
 	/**
 	 * Builds the dungeon screen layout.
@@ -76,25 +84,63 @@ public class DungeonPanel extends JPanel
 		return top;
 	}
 
-	// the three doors the player chooses between
+	/**
+	 * Builds the door buttons and the event result area below them.
+	 * The event area is hidden until a non-battle door is chosen.
+	 *
+	 * @return the center panel
+	 */
 	private JPanel buildDoors()
 	{
-		JPanel doors = new JPanel(new GridLayout(1, 3, 12, 12));
-		doors.setBackground(GuiStyle.BACKGROUND);
-		doors.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+		JPanel wrapper = new JPanel(new BorderLayout());
+		wrapper.setBackground(GuiStyle.BACKGROUND);
 
-		doors.add(makeDoorButton("Door 1", 1));
-		doors.add(makeDoorButton("Door 2", 2));
-		doors.add(makeDoorButton("Door 3", 3));
+		// three door buttons across the top of the center area
+		JPanel doorRow = new JPanel(new GridLayout(1, 3, 12, 12));
+		doorRow.setBackground(GuiStyle.BACKGROUND);
+		doorRow.setBorder(BorderFactory.createEmptyBorder(20, 30, 10, 30));
 
-		return doors;
+		doorButtons = new JButton[3];
+		for (int i = 0; i < 3; i++)
+		{
+			doorButtons[i] = makeDoorButton("DOOR " + (i + 1), i + 1);
+			doorRow.add(doorButtons[i]);
+		}
+
+		// event label and continue button shown after picking a non-battle door
+		eventLabel = new JLabel("", SwingConstants.CENTER);
+		eventLabel.setForeground(GuiStyle.TEXT);
+		eventLabel.setFont(GuiStyle.BIG_FONT);
+		eventLabel.setVisible(false);
+
+		continueButton = new JButton("CONTINUE");
+		GuiStyle.styleButton(continueButton);
+		continueButton.setVisible(false);
+		continueButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				gameManager.onDungeonContinue();
+			}
+		});
+
+		JPanel eventPanel = new JPanel(new BorderLayout(0, 12));
+		eventPanel.setBackground(GuiStyle.BACKGROUND);
+		eventPanel.setBorder(BorderFactory.createEmptyBorder(20, 80, 20, 80));
+		eventPanel.add(eventLabel, BorderLayout.CENTER);
+		eventPanel.add(continueButton, BorderLayout.SOUTH);
+
+		wrapper.add(doorRow, BorderLayout.NORTH);
+		wrapper.add(eventPanel, BorderLayout.CENTER);
+
+		return wrapper;
 	}
 
 	/**
-	 * Makes a door button that reports its number when clicked.
+	 * Makes a door button that disables all doors and reports the choice.
 	 *
 	 * @param text the button label
-	 * @param doorNumber which door this is (1, 2, or 3)
+	 * @param doorNumber which door (1, 2, or 3)
 	 * @return the finished button
 	 */
 	private JButton makeDoorButton(String text, final int doorNumber)
@@ -105,10 +151,38 @@ public class DungeonPanel extends JPanel
 		{
 			public void actionPerformed(ActionEvent e)
 			{
+				// lock all doors immediately so the player cant click twice
+				setDoorsEnabled(false);
 				gameManager.chooseDoor(doorNumber);
 			}
 		});
 		return button;
+	}
+
+	/**
+	 * Shows what happened behind the door and reveals the continue button.
+	 * Called by GameManagerView for reward and nothing events.
+	 *
+	 * @param message what to show the player
+	 */
+	public void showEvent(String message)
+	{
+		eventLabel.setText(message);
+		eventLabel.setVisible(true);
+		continueButton.setVisible(true);
+	}
+
+	/**
+	 * Enables or disables all three door buttons.
+	 *
+	 * @param enabled true to allow clicking
+	 */
+	public void setDoorsEnabled(boolean enabled)
+	{
+		for (JButton b : doorButtons)
+		{
+			b.setEnabled(enabled);
+		}
 	}
 
 	// the stat bars plus the save button along the bottom
@@ -150,8 +224,9 @@ public class DungeonPanel extends JPanel
 	}
 
 	/**
-	 * Updates the stage number and all the stat bars from the player. Called
-	 * every time we enter the dungeon screen.
+	 * Updates everything on the dungeon screen from the current player state.
+	 * Resets the event area and re-enables doors. Called each time we enter
+	 * this screen.
 	 *
 	 * @param player the current player
 	 * @param stage the current stage number
@@ -159,6 +234,11 @@ public class DungeonPanel extends JPanel
 	public void refresh(Player player, int stage)
 	{
 		stageLabel.setText("Stage " + stage);
+
+		// reset event area for the new stage
+		eventLabel.setVisible(false);
+		continueButton.setVisible(false);
+		setDoorsEnabled(true);
 
 		hpBar.setForeground(GuiStyle.colorForClass(player.getCharacterClass()));
 		hpBar.setMaximum(player.getMaxHealth());

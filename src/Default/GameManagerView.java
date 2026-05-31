@@ -165,7 +165,9 @@ public class GameManagerView extends JFrame
 	}
 
 	/**
-	 * Handles whatever is behind the door the player picked.
+	 * Handles whatever is behind the door the player picked. For enemy and boss
+	 * events the battle screen opens. For reward and nothing events we show a
+	 * message on the dungeon screen and wait for the player to hit continue.
 	 *
 	 * @param choice which door (1, 2, or 3)
 	 */
@@ -180,17 +182,25 @@ public class GameManagerView extends JFrame
 		}
 		else if (type.equals("reward"))
 		{
-			// grab the item then move on to the next stage
+			// add item first, then show feedback and wait for continue click
 			player.addItem(door.getItem());
-			dungeonController.moveToNextStage();
-			enterDungeon();
+			dungeonPanel.showEvent("You found a " + door.getItem().getItemType() + "!");
 		}
 		else
 		{
-			// nothing happened, just move on
-			dungeonController.moveToNextStage();
-			enterDungeon();
+			// nothing happened, let the player see that before moving on
+			dungeonPanel.showEvent("Nothing happened... you rest and recover.");
 		}
+	}
+
+	/**
+	 * Called when the player clicks CONTINUE on the dungeon screen after a
+	 * non-battle event. Advances to the next stage.
+	 */
+	public void onDungeonContinue()
+	{
+		dungeonController.moveToNextStage();
+		enterDungeon();
 	}
 
 	/**
