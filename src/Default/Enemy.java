@@ -20,8 +20,9 @@ package Default;
  * isBoss can be set to flag a boss encounter.
  *
  * Enemy is a model class used by Battle.
+ * Enemy implements Attackable so it can be used in combat.
  */
-public class Enemy
+public class Enemy implements Attackable
 {
 	private String enemyType;
 	private int health;
@@ -97,5 +98,16 @@ public class Enemy
 	public String getEnemyType()
 	{
 		return enemyType;
+	}
+
+	/**
+	 * Required by Attackable. Passes damage to takeDamage.
+	 *
+	 * @param damage incoming damage
+	 */
+	@Override
+	public void receivedDamage(int damage)
+	{
+		takeDamage(damage);
 	}
 }

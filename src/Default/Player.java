@@ -23,14 +23,17 @@ import java.util.ArrayList;
  * Subclasses (Archer, Mage, Warrior) set their own starting values.
  *
  * Player is a base class extended by each character class.
+ * Player implements Attackable so it can be used in combat.
  */
-public class Player
+public class Player implements Attackable
 {
 	private String characterClass;
 	private int health;
 	private int maxHealth;
 	private int mana;
+	private int maxMana;
 	private int stamina;
+	private int maxStamina;
 	private int damage;
 	private ArrayList<Skill> skills;
 	private ArrayList<Item> inventory;
@@ -104,6 +107,16 @@ public class Player
 	 * @param stamina starting stamina
 	 * @param damage base attack damage
 	 */
+	/**
+	 * Creates a Player with the given stats.
+	 * Max values are saved from the starting values so we can track them later.
+	 *
+	 * @param characterClass the player's class (e.g. "Archer")
+	 * @param health starting health
+	 * @param mana starting mana
+	 * @param stamina starting stamina
+	 * @param damage base attack damage
+	 */
 	public Player(String characterClass, int health, int mana, int stamina, int damage)
 	{
 		this.skills = new ArrayList<Skill>();
@@ -113,7 +126,10 @@ public class Player
 		// save max so we can cap healing later
 		this.maxHealth = health;
 		this.mana = mana;
+		// same thing for mana and stamina
+		this.maxMana = mana;
 		this.stamina = stamina;
+		this.maxStamina = stamina;
 		this.damage = damage;
 	}
 
@@ -197,5 +213,70 @@ public class Player
 	public void setHealth(int health)
 	{
 		this.health = health;
+	}
+
+	/**
+	 * Returns the player's current mana.
+	 *
+	 * @return current mana
+	 */
+	public int getMana()
+	{
+		return mana;
+	}
+
+	/**
+	 * Returns the player's max mana.
+	 *
+	 * @return max mana
+	 */
+	public int getMaxMana()
+	{
+		return maxMana;
+	}
+
+	/**
+	 * Returns the player's current stamina.
+	 *
+	 * @return current stamina
+	 */
+	public int getStamina()
+	{
+		return stamina;
+	}
+
+	/**
+	 * Returns the player's max stamina.
+	 *
+	 * @return max stamina
+	 */
+	public int getMaxStamina()
+	{
+		return maxStamina;
+	}
+
+	/**
+	 * Deducts mana by the given amount. Wont go below 0.
+	 *
+	 * @param amount how much mana to use
+	 */
+	public void useMana(int amount)
+	{
+		mana -= amount;
+		if (mana < 0)
+		{
+			mana = 0;
+		}
+	}
+
+	/**
+	 * Required by Attackable. Passes damage to takeDamage.
+	 *
+	 * @param damage incoming damage
+	 */
+	@Override
+	public void receivedDamage(int damage)
+	{
+		takeDamage(damage);
 	}
 }

@@ -58,7 +58,12 @@ public class BattleScannerInput
 		{
 			if (battle.getTurn().equals("Player"))
 			{
-				System.out.println("\nYour Turn! Choose (attack / block / skill / item): ");
+				// show current stats so the player knows where they stand
+				Player p = battle.getPlayer();
+				System.out.println("\n[HP: " + p.getHealth() + "/" + p.getMaxHealth()
+						+ " | Mana: " + p.getMana() + "/" + p.getMaxMana()
+						+ " | Stamina: " + p.getStamina() + "/" + p.getMaxStamina() + "]");
+				System.out.println("Your Turn! Choose (attack / block / skill / item): ");
 				String action = getPlayerAction(scanner);
 				battleController.handlePlayerAction(action);
 			}
