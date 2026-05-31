@@ -80,9 +80,9 @@ public class GameManagerView extends JFrame
 
 		showScreen("home");
 
+		// maximize the window so the game fills the whole screen
 		pack();
-		// center the window on the screen
-		setLocationRelativeTo(null);
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
 
 	/**
@@ -201,12 +201,12 @@ public class GameManagerView extends JFrame
 		{
 			// add item first, then show feedback and wait for continue click
 			player.addItem(door.getItem());
-			dungeonPanel.showEvent("You found a " + door.getItem().getItemType() + "!");
+			dungeonPanel.showEvent("You found a " + door.getItem().getItemType() + "!", "potion");
 		}
 		else
 		{
 			// nothing happened, let the player see that before moving on
-			dungeonPanel.showEvent("Nothing happened... you rest and recover.");
+			dungeonPanel.showEvent("Nothing happened... you rest and recover.", null);
 		}
 	}
 

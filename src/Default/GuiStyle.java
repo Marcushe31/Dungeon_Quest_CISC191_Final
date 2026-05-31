@@ -41,7 +41,14 @@ public class GuiStyle
 	public static final Color WARRIOR_RED = new Color(200, 70, 60);
 	public static final Color MAGE_BLUE = new Color(90, 120, 210);
 	public static final Color ARCHER_GREEN = new Color(90, 180, 100);
+	public static final Color STAMINA_ORANGE = new Color(220, 130, 40);
 	public static final Color ENEMY_RED = new Color(140, 40, 40);
+	// stone/dungeon tones for door and dungeon backgrounds
+	public static final Color STONE_DARK = new Color(50, 48, 58);
+	public static final Color STONE_MID = new Color(72, 68, 80);
+	public static final Color STONE_LIGHT = new Color(100, 95, 112);
+	public static final Color WOOD_DARK = new Color(60, 38, 18);
+	public static final Color WOOD_MID = new Color(88, 56, 28);
 
 	// bold monospaced font gives us that pixel/retro feel without a custom ttf
 	public static final Font TITLE_FONT = new Font("Monospaced", Font.BOLD, 36);

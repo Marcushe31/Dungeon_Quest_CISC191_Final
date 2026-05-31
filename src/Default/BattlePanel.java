@@ -51,12 +51,12 @@ public class BattlePanel extends JPanel
 
 	// enemy display (top right of the field)
 	private JLabel enemyName;
-	private JLabel enemySprite;
+	private SpritePanel enemySprite;
 	private JProgressBar enemyHpBar;
 
 	// player display (bottom left of the field)
 	private JLabel playerName;
-	private JLabel playerSprite;
+	private SpritePanel playerSprite;
 	private JProgressBar playerHpBar;
 
 	private JLabel promptLabel;
@@ -80,7 +80,7 @@ public class BattlePanel extends JPanel
 	public BattlePanel(GameManagerView gameManager)
 	{
 		this.gameManager = gameManager;
-		setPreferredSize(new Dimension(760, 540));
+		// no fixed size -- let it fill the fullscreen window
 		setBackground(GuiStyle.BACKGROUND);
 		setLayout(new BorderLayout());
 
@@ -121,9 +121,7 @@ public class BattlePanel extends JPanel
 
 		enemyName = makeLabel("ENEMY");
 		enemyHpBar = makeHpBar(GuiStyle.ENEMY_RED);
-
-		// placeholder sprite, drop in a real picture later with an ImageIcon
-		enemySprite = makeSprite("[ ENEMY ]");
+		enemySprite = new SpritePanel("Goblin"); // updated in startBattle()
 
 		JPanel info = new JPanel(new BorderLayout());
 		info.setBackground(GuiStyle.BACKGROUND);
@@ -142,8 +140,7 @@ public class BattlePanel extends JPanel
 
 		playerName = makeLabel("HERO");
 		playerHpBar = makeHpBar(GuiStyle.TEXT);
-
-		playerSprite = makeSprite("[ HERO ]");
+		playerSprite = new SpritePanel("Warrior"); // updated in startBattle()
 
 		JPanel info = new JPanel(new BorderLayout());
 		info.setBackground(GuiStyle.BACKGROUND);
@@ -163,9 +160,11 @@ public class BattlePanel extends JPanel
 	 */
 	private JPanel buildControls()
 	{
+		int sh = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
 		JPanel controls = new JPanel(new BorderLayout());
 		controls.setBackground(GuiStyle.PANEL);
-		controls.setPreferredSize(new Dimension(760, 190));
+		// scale controls height to screen so it doesnt look tiny on 1080p
+		controls.setPreferredSize(new Dimension(0, sh * 22 / 100));
 
 		logArea = new JTextArea();
 		logArea.setEditable(false);
@@ -176,7 +175,8 @@ public class BattlePanel extends JPanel
 		logArea.setWrapStyleWord(true);
 
 		JScrollPane scroll = new JScrollPane(logArea);
-		scroll.setPreferredSize(new Dimension(420, 190));
+		int sw = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
+		scroll.setPreferredSize(new Dimension(sw * 35 / 100, 0));
 
 		controls.add(scroll, BorderLayout.WEST);
 		controls.add(buildActionArea(), BorderLayout.CENTER);
@@ -292,8 +292,11 @@ public class BattlePanel extends JPanel
 
 		playerName.setText(player.getCharacterClass());
 		enemyName.setText(enemy.getEnemyType());
-		playerSprite.setText("[ " + player.getCharacterClass().toUpperCase() + " ]");
-		enemySprite.setText("[ " + enemy.getEnemyType().toUpperCase() + " ]");
+		// swap sprite panels to the right character for this fight
+		playerSprite.type = player.getCharacterClass();
+		enemySprite.type  = enemy.getEnemyType();
+		playerSprite.repaint();
+		enemySprite.repaint();
 		promptLabel.setText("What will " + player.getCharacterClass() + " do?");
 
 		// color the player hp bar to match their class
@@ -381,17 +384,7 @@ public class BattlePanel extends JPanel
 		return label;
 	}
 
-	// a placeholder sprite box, easy to replace with a real image later
-	private JLabel makeSprite(String text)
-	{
-		JLabel sprite = new JLabel(text, SwingConstants.CENTER);
-		sprite.setForeground(GuiStyle.TEXT);
-		sprite.setFont(GuiStyle.BIG_FONT);
-		sprite.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-		return sprite;
-	}
-
-	private JProgressBar makeHpBar(Color color)
+private JProgressBar makeHpBar(Color color)
 	{
 		JProgressBar bar = new JProgressBar();
 		bar.setStringPainted(true);
