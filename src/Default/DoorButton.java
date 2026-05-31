@@ -67,10 +67,16 @@ public class DoorButton extends JPanel
 
 		addMouseListener(new MouseAdapter()
 		{
-			public void mouseClicked(MouseEvent e)
+			// use mousePressed so it fires immediately on click down
+			// mouseClicked requires no movement between press and release which
+			// makes it unreliable -- this was the bug
+			public void mousePressed(MouseEvent e)
 			{
 				if (enabled)
 				{
+					// disable immediately so a second click cant sneak through
+					enabled = false;
+					repaint();
 					gameManager.chooseDoor(DoorButton.this.doorNumber);
 				}
 			}

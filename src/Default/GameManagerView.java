@@ -190,6 +190,8 @@ public class GameManagerView extends JFrame
 	 */
 	public void chooseDoor(int choice)
 	{
+		// lock all doors right away so no second click can go through
+		dungeonPanel.setDoorsEnabled(false);
 		Door door = dungeonController.handleDoorChoice(choice);
 		String type = door.getEventType();
 
