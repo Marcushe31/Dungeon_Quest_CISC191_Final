@@ -377,10 +377,6 @@ public class SpritePanel extends JPanel
 		shade(g, new Color(130,88,40), new Color(160,110,55), BRN, 26, 15, 9, 7);
 		r(g, STD, 28, 16, 2, 2);
 		r(g, STD, 31, 18, 2, 2);
-		// pointy dagger in left hand
-		shade(g, new Color(190,195,205), new Color(235,240,250), new Color(120,125,135), 5, 27, 3, 12);
-		r(g, new Color(235,240,250), 4, 26, 5, 2);
-		shade(g, BRN, BRN_H, new Color(70,40,20), 5, 38, 3, 5);
 
 		// huge pointed ears
 		shade(g, GRN, GRN_H, GRN_S, 1, 15, 9, 8);
@@ -420,6 +416,24 @@ public class SpritePanel extends JPanel
 		shade(g, DGR, GRN, GRN_S, 22, 41, 6, 7);
 		shade(g, new Color(55,33,12), BRN, new Color(40,24,10), 11, 47, 8, 3);
 		shade(g, new Color(55,33,12), BRN, new Color(40,24,10), 21, 47, 8, 3);
+
+		// curved silver dagger gripped in the left hand, raised in front of the arm
+		Color SIL = new Color(200, 205, 215), SIL_H = new Color(240, 244, 252), SIL_S = new Color(130, 135, 148);
+		// blade angles up to a point above the fist
+		shade(g, SIL, SIL_H, SIL_S, 3, 18, 4, 11);
+		r(g, SIL_S, 3, 18, 1, 11);
+		r(g, SIL_H, 5, 19, 1, 9);
+		// sharpened tip
+		r(g, SIL_H, 4, 16, 2, 2);
+		r(g, SIL, 4, 15, 1, 1);
+		// gold crossguard
+		shade(g, YLW, new Color(250,225,90), STD, 1, 29, 8, 2);
+		// wrapped grip in the fist
+		shade(g, BRN, BRN_H, new Color(70,40,20), 3, 31, 4, 5);
+		r(g, new Color(70,40,20), 4, 32, 1, 3);
+		// round gold pommel
+		r(g, YLW, 3, 36, 4, 2);
+		r(g, new Color(250,225,90), 4, 36, 1, 1);
 	}
 
 	// -------------------------------------------------------------------------
@@ -433,18 +447,32 @@ public class SpritePanel extends JPanel
 		Color GLD = new Color(150, 115, 60);
 		Color BLU = new Color(80, 190, 230);
 
-		// skull
-		shade(g, BON, BON_H, BON_S, 11, 4, 18, 12);
+		// domed cranium -- rounded top so it isn't flat against the ceiling
+		r(g, BON, 15, 2, 10, 1);
+		r(g, BON, 13, 3, 14, 1);
+		shade(g, BON, BON_H, BON_S, 11, 4, 18, 11);
+		// bright highlight across the top of the dome
+		r(g, BON_H, 14, 3, 9, 1);
+		r(g, BON_H, 12, 5, 4, 2);
+		// hairline crack down the right side of the skull
+		r(g, BON_S, 24, 3, 1, 4);
+		r(g, BON_S, 23, 5, 1, 2);
+		// cheekbones
 		r(g, BON_S, 10, 8, 2, 5);
 		r(g, BON_S, 28, 8, 2, 5);
-		// eye sockets
-		r(g, DRK, 13, 7, 5, 4);
-		r(g, DRK, 23, 7, 5, 4);
-		r(g, BLU, 14, 8, 2, 2);
-		r(g, BLU, 24, 8, 2, 2);
-		// nose + jaw + teeth
-		r(g, DRK, 19, 11, 3, 3);
+		// deep eye sockets with glowing blue pupils
+		r(g, DRK, 12, 7, 6, 5);
+		r(g, DRK, 22, 7, 6, 5);
+		r(g, BLU, 14, 8, 3, 3);
+		r(g, BLU, 24, 8, 3, 3);
+		r(g, BON_H, 15, 8, 1, 1);
+		r(g, BON_H, 25, 8, 1, 1);
+		// triangular nose cavity
+		r(g, DRK, 19, 11, 3, 2);
+		r(g, DRK, 20, 13, 1, 1);
+		// jaw + gritted teeth with dark gaps
 		shade(g, BON_S, BON, BON_S, 13, 14, 14, 4);
+		r(g, DRK, 13, 14, 14, 1);
 		r(g, BON, 14, 15, 2, 3);
 		r(g, BON, 17, 15, 2, 3);
 		r(g, BON, 20, 15, 2, 3);
@@ -526,14 +554,25 @@ public class SpritePanel extends JPanel
 		r(g, WHT, 22, 44, 2, 2);
 		r(g, WHT, 27, 44, 2, 2);
 
-		// head, horns, crown spikes
-		shade(g, RED, RED_H, RED_S, 9, 7, 22, 15);
-		shade(g, BEL, BEL, BEL_S, 10, 1, 4, 8);
-		shade(g, BEL, BEL, BEL_S, 26, 1, 4, 8);
-		r(g, RED_H, 16, 3, 3, 5);
-		r(g, RED_H, 21, 3, 3, 5);
-		r(g, GLD, 18, 2, 1, 3);
-		r(g, GLD, 22, 2, 1, 3);
+		// head (dropped 1px so the horns have room to point up)
+		shade(g, RED, RED_H, RED_S, 9, 8, 22, 14);
+
+		// swept-back ivory horns with gold tips, tapering to points
+		Color IVR = new Color(245, 230, 200), IVR_S = new Color(195, 175, 140);
+		// left horn sweeps up and out
+		shade(g, IVR, IVR, IVR_S, 10, 6, 4, 3);
+		shade(g, IVR, IVR, IVR_S, 8, 3, 4, 3);
+		shade(g, IVR, IVR, IVR_S, 7, 1, 3, 3);
+		r(g, GLD, 7, 1, 2, 2);
+		// right horn sweeps up and out
+		shade(g, IVR, IVR, IVR_S, 26, 6, 4, 3);
+		shade(g, IVR, IVR, IVR_S, 28, 3, 4, 3);
+		shade(g, IVR, IVR, IVR_S, 30, 1, 3, 3);
+		r(g, GLD, 31, 1, 2, 2);
+		// jagged crown spikes between the horns
+		r(g, RED_S, 15, 5, 2, 4);
+		r(g, RED_H, 19, 4, 2, 5);
+		r(g, RED_S, 23, 5, 2, 4);
 		// snout + mouth
 		shade(g, RED_H, RED_H, RED_S, 11, 17, 18, 6);
 		r(g, new Color(25,8,8), 13, 19, 14, 4);
