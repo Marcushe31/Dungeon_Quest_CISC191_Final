@@ -161,11 +161,6 @@ public class Player implements Attackable
 		if (amount > 0)
 		{
 			health += amount;
-			// dont let health go above the max
-			if (health > maxHealth)
-			{
-				health = maxHealth;
-			}
 		}
 	}
 
@@ -213,6 +208,16 @@ public class Player implements Attackable
 	public void setHealth(int health)
 	{
 		this.health = health;
+	}
+
+	public void setMana(int mana)
+	{
+		this.mana = mana;
+	}
+
+	public void setStamina(int stamina)
+	{
+		this.stamina = stamina;
 	}
 
 	/**
@@ -266,6 +271,38 @@ public class Player implements Attackable
 		if (mana < 0)
 		{
 			mana = 0;
+		}
+	}
+
+	public void restoreMana(int amount)
+	{
+		mana += amount;
+		if (mana > maxMana)
+		{
+			mana = maxMana;
+		}
+	}
+
+	/**
+	 * Deducts stamina by the given amount. Wont go below 0.
+	 *
+	 * @param amount how much stamina to use
+	 */
+	public void useStamina(int amount)
+	{
+		stamina -= amount;
+		if (stamina < 0)
+		{
+			stamina = 0;
+		}
+	}
+
+	public void restoreStamina(int amount)
+	{
+		stamina += amount;
+		if (stamina > maxStamina)
+		{
+			stamina = maxStamina;
 		}
 	}
 

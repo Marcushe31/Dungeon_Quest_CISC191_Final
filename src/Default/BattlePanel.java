@@ -18,7 +18,10 @@ package Default;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +35,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
 
 /**
  * Purpose: BattlePanel is the battle screen (the View for a fight). It shows
@@ -48,16 +50,22 @@ public class BattlePanel extends JPanel
 	private GameManagerView gameManager;
 	private Battle battle;
 	private BattleController battleController;
+	private boolean isBossBattle = false;
+	private JPanel battlefield;   // keep ref so we can repaint background
+	private JPanel enemyCell;
+	private JPanel playerCell;
 
 	// enemy display (top right of the field)
 	private JLabel enemyName;
 	private SpritePanel enemySprite;
 	private JProgressBar enemyHpBar;
+	private JProgressBar enemyResourceBar;
 
 	// player display (bottom left of the field)
 	private JLabel playerName;
 	private SpritePanel playerSprite;
 	private JProgressBar playerHpBar;
+	private JProgressBar playerResourceBar;
 
 	private JLabel promptLabel;
 	private JTextArea logArea;
@@ -96,60 +104,216 @@ public class BattlePanel extends JPanel
 	 */
 	private JPanel buildBattlefield()
 	{
-		JPanel field = new JPanel(new GridLayout(2, 2));
-		field.setBackground(GuiStyle.BACKGROUND);
+		battlefield = new JPanel(null)
+		{
+			@Override
+			protected void paintComponent(Graphics g)
+			{
+				super.paintComponent(g);
+				Graphics2D g2 = (Graphics2D) g.create();
+				if (isBossBattle) drawDragonLair(g2, getWidth(), getHeight());
+				else              drawDungeonBg(g2, getWidth(), getHeight());
+				g2.dispose();
+			}
 
-		field.add(emptyCell());
-		field.add(buildEnemyCell());
-		field.add(buildPlayerCell());
-		field.add(emptyCell());
+			@Override
+			public void doLayout()
+			{
+				int W = getWidth();
+				int H = getHeight();
+				if (playerCell != null)
+				{
+					playerCell.setBounds(0, H * 48 / 100, W / 2, H * 52 / 100);
+				}
+				if (enemyCell != null)
+				{
+					enemyCell.setBounds(W / 2, H * 28 / 100, W / 2, H * 44 / 100);
+				}
+			}
+		};
+		battlefield.setOpaque(true);
 
-		return field;
+		playerCell = buildPlayerCell();
+		enemyCell = buildEnemyCell();
+		battlefield.add(playerCell);
+		battlefield.add(enemyCell);
+
+		return battlefield;
+	}
+
+	// dungeon stone background for normal battles
+	private void drawDungeonBg(Graphics2D g, int W, int H)
+	{
+		// dark stone background
+		g.setColor(new Color(32, 28, 38));
+		g.fillRect(0, 0, W, H);
+		// stone block rows
+		g.setColor(new Color(44, 40, 52));
+		int bw = W / 10, bh = H / 12;
+		for (int row = 0; row < 14; row++)
+		{
+			int off = (row % 2 == 0) ? 0 : bw / 2;
+			for (int col = -1; col < 12; col++)
+			{
+				g.fillRect(col * bw + off + 1, row * bh + 1, bw - 2, bh - 2);
+			}
+		}
+		// dark floor
+		g.setColor(new Color(22, 19, 28));
+		g.fillRect(0, H * 55 / 100, W, H * 45 / 100);
+		g.setColor(new Color(35, 30, 42));
+		for (int x = 0; x < W; x += W / 8)
+		{
+			g.fillRect(x + 2, H * 55 / 100 + 2, W / 8 - 4, H / 16);
+		}
+		// torches
+		drawBgTorch(g, W / 10, H * 30 / 100);
+		drawBgTorch(g, W * 9 / 10, H * 30 / 100);
+	}
+
+	// dragon lair background for boss fight
+	private void drawDragonLair(Graphics2D g, int W, int H)
+	{
+		// deep red/black cave
+		g.setColor(new Color(18, 6, 4));
+		g.fillRect(0, 0, W, H);
+		// orange cave glow from sides
+		for (int i = 3; i > 0; i--)
+		{
+			g.setColor(new Color(200, 80, 20, i * 18));
+			g.fillOval(-W / 3, H / 4 - H / 3 * i / 3, W * 2 / 3, H / 2);
+			g.fillOval(W * 2 / 3, H / 4 - H / 3 * i / 3, W * 2 / 3, H / 2);
+		}
+		// cave ceiling stalactites
+		g.setColor(new Color(40, 28, 32));
+		for (int x = W / 12; x < W; x += W / 8)
+		{
+			int h = H / 10 + (x % (W / 5)) / 3;
+			int[] xs = {x - W/20, x + W/20, x};
+			int[] ys = {0, 0, h};
+			g.fillPolygon(xs, ys, 3);
+		}
+		// dark cave floor
+		g.setColor(new Color(28, 18, 14));
+		g.fillRect(0, H * 55 / 100, W, H * 45 / 100);
+		// gold coin piles on floor
+		g.setColor(new Color(200, 165, 30));
+		int[] coinX = {W/12, W/5, W*3/10, W*7/10, W*4/5, W*9/10};
+		int[] coinY = {84, 74, 88, 86, 72, 84};
+		int[] coinS = {20, 18, 17, 18, 19, 21};
+		for (int i = 0; i < coinX.length; i++)
+		{
+			for (int j = 0; j < 7; j++)
+			{
+				g.fillOval(coinX[i] + j * 7 - 20, H * coinY[i] / 100 + j % 2 * 4,
+						coinS[i], Math.max(4, coinS[i] / 3));
+			}
+		}
+		g.setColor(new Color(235, 195, 55));
+		for (int i = 0; i < 10; i++)
+		{
+			int x = W / 14 + i * W / 11;
+			if (x > W * 43 / 100 && x < W * 66 / 100)
+			{
+				x += W / 5;
+			}
+			int y = H * (58 + (i * 7) % 32) / 100;
+			g.fillOval(x, y, 10 + (i % 3) * 3, 4);
+		}
+	}
+
+	private void drawBgTorch(Graphics2D g, int x, int y)
+	{
+		g.setColor(new Color(110, 75, 35));
+		g.fillRect(x - 4, y, 8, 20);
+		g.setColor(new Color(255, 160, 40, 80));
+		g.fillOval(x - 14, y - 28, 28, 34);
+		g.setColor(new Color(255, 200, 60));
+		g.fillOval(x - 7, y - 18, 14, 20);
 	}
 
 	private JPanel emptyCell()
 	{
 		JPanel cell = new JPanel();
-		cell.setBackground(GuiStyle.BACKGROUND);
+		cell.setOpaque(false);
 		return cell;
 	}
 
 	private JPanel buildEnemyCell()
 	{
 		JPanel cell = new JPanel(new BorderLayout());
-		cell.setBackground(GuiStyle.BACKGROUND);
+		cell.setOpaque(false);
 
 		enemyName = makeLabel("ENEMY");
 		enemyHpBar = makeHpBar(GuiStyle.ENEMY_RED);
+		enemyResourceBar = makeHpBar(GuiStyle.STAMINA_ORANGE);
+		enemyResourceBar.setVisible(false);
 		enemySprite = new SpritePanel("Goblin"); // updated in startBattle()
 
+		JPanel bars = new JPanel(new GridLayout(2, 1, 0, 2));
+		bars.setOpaque(false);
+		bars.add(enemyHpBar);
+		bars.add(enemyResourceBar);
+
 		JPanel info = new JPanel(new BorderLayout());
-		info.setBackground(GuiStyle.BACKGROUND);
+		info.setOpaque(false);
 		info.add(enemyName, BorderLayout.NORTH);
-		info.add(enemyHpBar, BorderLayout.SOUTH);
+		info.add(bars, BorderLayout.SOUTH);
 
 		cell.add(info, BorderLayout.NORTH);
-		cell.add(enemySprite, BorderLayout.CENTER);
+		cell.add(makeSpriteStand(enemySprite, true), BorderLayout.CENTER);
 		return cell;
 	}
 
 	private JPanel buildPlayerCell()
 	{
 		JPanel cell = new JPanel(new BorderLayout());
-		cell.setBackground(GuiStyle.BACKGROUND);
+		cell.setOpaque(false);
 
 		playerName = makeLabel("HERO");
 		playerHpBar = makeHpBar(GuiStyle.TEXT);
+		playerResourceBar = makeHpBar(GuiStyle.STAMINA_ORANGE);
 		playerSprite = new SpritePanel("Warrior"); // updated in startBattle()
 
-		JPanel info = new JPanel(new BorderLayout());
-		info.setBackground(GuiStyle.BACKGROUND);
-		info.add(playerName, BorderLayout.NORTH);
-		info.add(playerHpBar, BorderLayout.SOUTH);
+		JPanel bars = new JPanel(new GridLayout(2, 1, 0, 2));
+		bars.setOpaque(false);
+		bars.add(playerHpBar);
+		bars.add(playerResourceBar);
 
-		cell.add(playerSprite, BorderLayout.CENTER);
+		JPanel info = new JPanel(new BorderLayout());
+		info.setOpaque(false);
+		info.add(playerName, BorderLayout.NORTH);
+		info.add(bars, BorderLayout.SOUTH);
+
+		cell.add(makeSpriteStand(playerSprite, false), BorderLayout.CENTER);
 		cell.add(info, BorderLayout.SOUTH);
 		return cell;
+	}
+
+	private JPanel makeSpriteStand(SpritePanel sprite, boolean enemy)
+	{
+		JPanel stand = new JPanel(new BorderLayout());
+		stand.setOpaque(false);
+
+		JPanel anchor = new JPanel(new BorderLayout())
+		{
+			@Override
+			protected void paintComponent(Graphics g)
+			{
+				super.paintComponent(g);
+				Graphics2D g2 = (Graphics2D) g.create();
+				g2.setColor(new Color(0, 0, 0, 70));
+					int y = getHeight() - 44;
+					g2.fillOval(getWidth() / 2 - 78, y, 156, 18);
+				g2.dispose();
+			}
+		};
+		anchor.setOpaque(false);
+		anchor.setPreferredSize(new Dimension(0, 285));
+		anchor.add(sprite, BorderLayout.CENTER);
+		stand.add(anchor, BorderLayout.SOUTH);
+		stand.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		return stand;
 	}
 
 	/**
@@ -208,6 +372,7 @@ public class BattlePanel extends JPanel
 
 		continueButton = new JButton("CONTINUE");
 		GuiStyle.styleButton(continueButton);
+		continueButton.setPreferredSize(new Dimension(220, 55));
 		continueButton.setVisible(false);
 		continueButton.addActionListener(new ActionListener()
 		{
@@ -220,6 +385,7 @@ public class BattlePanel extends JPanel
 		// saves current HP and stage then returns to the title screen
 		saveQuitButton = new JButton("SAVE & QUIT");
 		GuiStyle.styleButton(saveQuitButton);
+		saveQuitButton.setPreferredSize(new Dimension(220, 55));
 		saveQuitButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -232,6 +398,7 @@ public class BattlePanel extends JPanel
 		// returns home without saving
 		quitHomeButton = new JButton("QUIT TO HOME");
 		GuiStyle.styleButton(quitHomeButton);
+		quitHomeButton.setPreferredSize(new Dimension(220, 55));
 		quitHomeButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -280,10 +447,12 @@ public class BattlePanel extends JPanel
 	 * @param battle the new battle
 	 * @param battleController the controller for that battle
 	 */
-	public void startBattle(Battle battle, BattleController battleController)
+	public void startBattle(Battle battle, BattleController battleController, boolean isBossBattle)
 	{
 		this.battle = battle;
 		this.battleController = battleController;
+		this.isBossBattle = isBossBattle;
+		battlefield.repaint();
 
 		logArea.setText("");
 
@@ -297,10 +466,15 @@ public class BattlePanel extends JPanel
 		enemySprite.type  = enemy.getEnemyType();
 		playerSprite.repaint();
 		enemySprite.repaint();
+		String resourceName = player.getCharacterClass().equals("Mage") ? "MANA" : "STAMINA";
+		int skillCost = player.getSkillCount() > 0 ? player.getSkill(0).getCost() : 0;
+		skillsButton.setText("SKILLS (" + skillCost + " " + resourceName + ")");
 		promptLabel.setText("What will " + player.getCharacterClass() + " do?");
 
 		// color the player hp bar to match their class
 		playerHpBar.setForeground(GuiStyle.colorForClass(player.getCharacterClass()));
+		updatePlayerResourceBar(player);
+		enemyResourceBar.setVisible(false);
 
 		setActionsEnabled(true);
 		continueButton.setVisible(false);
@@ -331,11 +505,12 @@ public class BattlePanel extends JPanel
 
 		refresh();
 
-		// if the fight is over, hide the actions and show continue
+		// Finished battles move straight to the next screen.
 		if (!battle.isActive())
 		{
 			setActionsEnabled(false);
-			continueButton.setVisible(true);
+			continueButton.setVisible(false);
+			gameManager.onBattleEnd();
 		}
 	}
 
@@ -356,6 +531,8 @@ public class BattlePanel extends JPanel
 		enemyHpBar.setValue(enemy.getHealth());
 		enemyHpBar.setString("HP " + enemy.getHealth() + "/" + enemy.getMaxHealth());
 
+		updatePlayerResourceBar(player);
+
 		// copy the new log lines into the text area then clear them out
 		ArrayList<String> lines = battle.getBattleLog();
 		for (String line : lines)
@@ -366,6 +543,26 @@ public class BattlePanel extends JPanel
 
 		// auto scroll down to the newest message
 		logArea.setCaretPosition(logArea.getDocument().getLength());
+	}
+
+	private void updatePlayerResourceBar(Player player)
+	{
+		if (player.getCharacterClass().equals("Mage"))
+		{
+			playerResourceBar.setVisible(true);
+			playerResourceBar.setForeground(GuiStyle.MAGE_BLUE);
+			playerResourceBar.setMaximum(player.getMaxMana());
+			playerResourceBar.setValue(player.getMana());
+			playerResourceBar.setString("MANA " + player.getMana() + "/" + player.getMaxMana());
+		}
+		else
+		{
+			playerResourceBar.setVisible(true);
+			playerResourceBar.setForeground(GuiStyle.STAMINA_ORANGE);
+			playerResourceBar.setMaximum(player.getMaxStamina());
+			playerResourceBar.setValue(player.getStamina());
+			playerResourceBar.setString("STAMINA " + player.getStamina() + "/" + player.getMaxStamina());
+		}
 	}
 
 	private void setActionsEnabled(boolean enabled)

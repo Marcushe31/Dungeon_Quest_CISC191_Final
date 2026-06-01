@@ -32,12 +32,40 @@ public class GameSave
 	private int mana;
 	private int stamina;
 	private int stage;
+	private int itemCount;
+	private int enemiesDefeated;
+	private boolean inBattle;
+	private String enemyType;
+	private int enemyHealth;
+	private boolean bossBattle;
 
 	public GameSave(String characterClass, int health, int stage)
 	{
+		this(characterClass, health, 0, 0, stage, 0, 0);
+	}
+
+	public GameSave(String characterClass, int health, int mana, int stamina,
+			int stage, int itemCount, int enemiesDefeated)
+	{
+		this(characterClass, health, mana, stamina, stage, itemCount,
+				enemiesDefeated, false, "", 0, false);
+	}
+
+	public GameSave(String characterClass, int health, int mana, int stamina,
+			int stage, int itemCount, int enemiesDefeated, boolean inBattle,
+			String enemyType, int enemyHealth, boolean bossBattle)
+	{
 		this.characterClass = characterClass;
 		this.health = health;
+		this.mana = mana;
+		this.stamina = stamina;
 		this.stage = stage;
+		this.itemCount = itemCount;
+		this.enemiesDefeated = enemiesDefeated;
+		this.inBattle = inBattle;
+		this.enemyType = enemyType;
+		this.enemyHealth = enemyHealth;
+		this.bossBattle = bossBattle;
 	}
 
 	public String getCharacterClass()
@@ -63,5 +91,35 @@ public class GameSave
 	public int getStage()
 	{
 		return stage;
+	}
+
+	public int getItemCount()
+	{
+		return itemCount;
+	}
+
+	public int getEnemiesDefeated()
+	{
+		return enemiesDefeated;
+	}
+
+	public boolean isInBattle()
+	{
+		return inBattle;
+	}
+
+	public String getEnemyType()
+	{
+		return enemyType;
+	}
+
+	public int getEnemyHealth()
+	{
+		return enemyHealth;
+	}
+
+	public boolean isBossBattle()
+	{
+		return bossBattle;
 	}
 }

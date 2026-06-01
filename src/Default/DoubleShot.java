@@ -31,7 +31,7 @@ public class DoubleShot extends Skill
 {
 
 	// hits twice so total is 36 dmg, scales with Archer's new base of 18
-	private static final int DAMAGE = 18;
+	private static final int DAMAGE = 21;
 
 	public DoubleShot()
 	{

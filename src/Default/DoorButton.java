@@ -41,6 +41,7 @@ public class DoorButton extends JPanel
 	private GameManagerView gameManager;
 	private boolean hovered;
 	private boolean enabled;
+	private boolean revealedPotion;
 
 	// stone and wood colors shared across all doors
 	private static final Color STONE_A = new Color(55, 52, 65);
@@ -107,6 +108,19 @@ public class DoorButton extends JPanel
 		repaint();
 	}
 
+	public void clearReveal()
+	{
+		revealedPotion = false;
+		repaint();
+	}
+
+	public void showPotion()
+	{
+		revealedPotion = true;
+		enabled = false;
+		repaint();
+	}
+
 	@Override
 	protected void paintComponent(Graphics g)
 	{
@@ -123,6 +137,10 @@ public class DoorButton extends JPanel
 		{
 			g2.setColor(new Color(30, 28, 36));
 			g2.fillRect(0, 0, W, H);
+			if (revealedPotion)
+			{
+				drawOpenDoorReward(g2, W, H);
+			}
 			g2.dispose();
 			return;
 		}
@@ -135,9 +153,42 @@ public class DoorButton extends JPanel
 		drawStoneBricks(g2, W, H);
 		drawArch(g2, W, H);
 		drawDoor(g2, W, H);
-		drawDoorLabel(g2, W, H);
-
 		g2.dispose();
+	}
+
+	private void drawOpenDoorReward(Graphics2D g, int W, int H)
+	{
+		g.setColor(new Color(10, 8, 14));
+		g.fillRoundRect(W * 18 / 100, H * 10 / 100, W * 64 / 100, H * 80 / 100,
+				W / 15, W / 15);
+		g.setColor(new Color(80, 74, 90));
+		g.setStroke(new BasicStroke(5));
+		g.drawRoundRect(W * 18 / 100, H * 10 / 100, W * 64 / 100, H * 80 / 100,
+				W / 15, W / 15);
+		g.setColor(new Color(160, 25, 35, 90));
+		g.fillOval(W * 28 / 100, H * 24 / 100, W * 44 / 100, H * 50 / 100);
+		drawBigPotion(g, W / 2, H * 50 / 100, Math.min(W, H) * 42 / 100);
+	}
+
+	private void drawBigPotion(Graphics2D g, int cx, int cy, int s)
+	{
+		int x = cx - s / 2;
+		int y = cy - s / 2;
+		g.setColor(new Color(120, 70, 30));
+		g.fillRect(cx - s / 8, y, s / 4, s / 7);
+		g.setColor(new Color(210, 235, 245));
+		g.fillRect(cx - s / 6, y + s / 8, s / 3, s / 5);
+		g.setColor(new Color(210, 40, 50));
+		g.fillOval(x + s / 8, y + s / 4, s * 3 / 4, s * 2 / 3);
+		g.setColor(new Color(245, 90, 100));
+		g.fillOval(x + s / 5, y + s / 3, s / 4, s / 5);
+		g.setColor(Color.WHITE);
+		g.fillRect(cx - s / 12, cy - s / 10, s / 6, s / 3);
+		g.fillRect(cx - s / 5, cy, s * 2 / 5, s / 7);
+		g.setColor(Color.BLACK);
+		g.setStroke(new BasicStroke(3));
+		g.drawOval(x + s / 8, y + s / 4, s * 3 / 4, s * 2 / 3);
+		g.drawRect(cx - s / 6, y + s / 8, s / 3, s / 5);
 	}
 
 	/**

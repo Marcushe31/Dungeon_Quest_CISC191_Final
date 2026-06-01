@@ -80,6 +80,15 @@ public class Enemy implements Attackable
 		return health;
 	}
 
+	public void setHealth(int health)
+	{
+		this.health = health;
+		if (this.health < 0)
+		{
+			this.health = 0;
+		}
+	}
+
 	/**
 	 * Returns the enemy's max health.
 	 *

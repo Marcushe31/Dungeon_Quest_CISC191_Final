@@ -39,6 +39,7 @@ public class GameManagerView extends JFrame
 	private HomePanel homePanel;
 	private DungeonPanel dungeonPanel;
 	private BattlePanel battlePanel;
+	private BossDoorPanel bossDoorPanel;
 	private EndPanel endPanel;
 
 	// game state the view needs to keep track of between screens
@@ -69,11 +70,13 @@ public class GameManagerView extends JFrame
 		homePanel = new HomePanel(this);
 		dungeonPanel = new DungeonPanel(this);
 		battlePanel = new BattlePanel(this);
+		bossDoorPanel = new BossDoorPanel(this);
 		endPanel = new EndPanel(this);
 
 		cardPanel.add(homePanel, "home");
 		cardPanel.add(dungeonPanel, "dungeon");
 		cardPanel.add(battlePanel, "battle");
+		cardPanel.add(bossDoorPanel, "bossDoor");
 		cardPanel.add(endPanel, "end");
 
 		add(cardPanel);
@@ -122,17 +125,37 @@ public class GameManagerView extends JFrame
 			return;
 		}
 
-		this.player = makePlayer(save.getCharacterClass());
-		player.setHealth(save.getHealth());
+			this.player = makePlayer(save.getCharacterClass());
+			player.setHealth(save.getHealth());
+			if (save.getMana() >= 0)
+			{
+				player.setMana(save.getMana());
+			}
+			if (save.getStamina() >= 0)
+			{
+				player.setStamina(save.getStamina());
+			}
+			for (int i = 0; i < save.getItemCount(); i++)
+			{
+				player.addItem(new Item("Health Potion", 50));
+			}
 
-		this.dungeon = new Dungeon();
-		dungeon.setStage(save.getStage());
-		this.dungeonController = new DungeonController(dungeon);
-		// reset counter on load -- player has to earn the boss again
-		this.enemiesDefeated = 0;
+			this.dungeon = new Dungeon();
+			dungeon.setStage(save.getStage());
+			this.dungeonController = new DungeonController(dungeon);
+			this.enemiesDefeated = save.getEnemiesDefeated();
 
-		enterDungeon();
-	}
+			if (save.isInBattle())
+			{
+				Enemy savedEnemy = makeEnemy(save.getEnemyType());
+				savedEnemy.setHealth(save.getEnemyHealth());
+				startBattle(savedEnemy, save.isBossBattle());
+			}
+			else
+			{
+				enterDungeon();
+			}
+		}
 
 	/**
 	 * Rebuilds the right player subclass from a saved class name.
@@ -156,6 +179,26 @@ public class GameManagerView extends JFrame
 		}
 	}
 
+	private Enemy makeEnemy(String enemyType)
+	{
+		if (enemyType.equals("Rat"))
+		{
+			return new Enemy("Rat", 35, 20, 6);
+		}
+		else if (enemyType.equals("Goblin"))
+		{
+			return new Enemy("Goblin", 65, 30, 11);
+		}
+		else if (enemyType.equals("Skeleton"))
+		{
+			return new Enemy("Skeleton", 90, 40, 16);
+		}
+		else
+		{
+			return new Enemy("Dragon", 150, 50, 20);
+		}
+	}
+
 	/**
 	 * Makes a fresh set of doors and shows the dungeon screen.
 	 * If 3 enemies have already been defeated, skips straight to the boss.
@@ -170,15 +213,23 @@ public class GameManagerView extends JFrame
 		// once 3 enemies are down, force the boss encounter
 		if (enemiesDefeated >= 3)
 		{
-			DoorFactory factory = new DoorFactory();
-			Door bossDoor = factory.generateBossDoor();
-			startBattle(bossDoor.getEnemy(), true);
+			showScreen("bossDoor");
 			return;
 		}
 
 		dungeonController.generateDoors();
 		dungeonPanel.refresh(player, dungeonController.getStage(), enemiesDefeated);
 		showScreen("dungeon");
+	}
+
+	/**
+	 * Starts the dragon fight after the player clicks the boss door.
+	 */
+	public void enterBossFight()
+	{
+		DoorFactory factory = new DoorFactory();
+		Door bossDoor = factory.generateBossDoor();
+		startBattle(bossDoor.getEnemy(), true);
 	}
 
 	/**
@@ -203,12 +254,22 @@ public class GameManagerView extends JFrame
 		{
 			// add item first, then show feedback and wait for continue click
 			player.addItem(door.getItem());
-			dungeonPanel.showEvent("You found a " + door.getItem().getItemType() + "!", "potion");
+			dungeonPanel.showEvent("You found a " + door.getItem().getItemType() + "!", "potion", choice);
 		}
 		else
 		{
 			// nothing happened, let the player see that before moving on
-			dungeonPanel.showEvent("Nothing happened... you rest and recover.", null);
+			player.heal(20);
+			if (player.getCharacterClass().equals("Mage"))
+			{
+				player.restoreMana(15);
+			}
+			else
+			{
+				player.restoreStamina(15);
+			}
+			dungeonPanel.showEvent("You rest and recover: +20 HP, +15 "
+					+ (player.getCharacterClass().equals("Mage") ? "mana." : "stamina."), null, choice);
 		}
 	}
 
@@ -234,7 +295,7 @@ public class GameManagerView extends JFrame
 		this.battleController = new BattleController(battle);
 		this.bossBattle = isBoss;
 		battle.startBattle();
-		battlePanel.startBattle(battle, battleController);
+		battlePanel.startBattle(battle, battleController, isBoss);
 		showScreen("battle");
 	}
 
@@ -268,7 +329,7 @@ public class GameManagerView extends JFrame
 	 */
 	public void saveGame()
 	{
-		saveManager.saveGame(player, dungeon);
+		saveManager.saveGame(player, dungeon, enemiesDefeated, battle, bossBattle);
 	}
 
 	/**
@@ -276,6 +337,7 @@ public class GameManagerView extends JFrame
 	 */
 	public void goHome()
 	{
+		homePanel.resetSelectionLock();
 		showScreen("home");
 	}
 

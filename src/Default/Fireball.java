@@ -27,7 +27,7 @@ package Default;
  */
 public class Fireball extends Skill
 {
-	private static final int DAMAGE = 45;
+	private static final int DAMAGE = 52;
 	
 	public Fireball() {
 		super("Fireball", 20 );

@@ -50,16 +50,16 @@ public class DoorFactory
 
 	private Door generateDoor()
 	{
-		int randomEvent = random.nextInt(3);
+		// 60% enemy, 20% reward, 20% nothing
+		int randomEvent = random.nextInt(10);
 
-		if (randomEvent == 0)
+		if (randomEvent < 6)
 		{
 			Enemy enemy = generateEnemy();
 			return new Door("enemy", enemy, null);
 		}
-		else if (randomEvent == 1)
+		else if (randomEvent < 8)
 		{
-			// bumped to 50 so rewards actually matter mid-run
 			Item item = new Item("Health Potion", 50);
 			return new Door("reward", null, item);
 		}

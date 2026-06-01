@@ -32,8 +32,8 @@ public class Warrior extends Player
 {
 	public Warrior()
 	{
-		// health mana stamina damage -- buffed to survive 3 fights + boss
-		super("Warrior", 160, 40, 80, 22);
+		// health mana stamina damage -- Warrior uses stamina for skills
+		super("Warrior", 160, 0, 80, 22);
 		addSkill(new Rage());
 	}
 

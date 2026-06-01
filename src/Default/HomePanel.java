@@ -18,6 +18,7 @@ package Default;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -43,6 +44,7 @@ import javax.swing.border.BevelBorder;
 public class HomePanel extends JPanel
 {
 	private GameManagerView gameManager;
+	private boolean selectionLocked;
 
 	/**
 	 * Builds the title screen layout.
@@ -142,8 +144,7 @@ public class HomePanel extends JPanel
 		labels.add(d2);
 		card.add(labels, BorderLayout.SOUTH);
 
-		// hover effect: slightly lighter background
-		card.addMouseListener(new MouseAdapter()
+		MouseAdapter clickHandler = new MouseAdapter()
 		{
 			public void mouseEntered(MouseEvent e)
 			{
@@ -159,14 +160,38 @@ public class HomePanel extends JPanel
 				card.repaint();
 			}
 
-			public void mouseClicked(MouseEvent e)
+			// mousePressed fires immediately and cant be spammed
+			public void mousePressed(MouseEvent e)
 			{
-				Player player = makePlayer(className);
-				gameManager.startNewGame(player);
+				if (!selectionLocked && e.getButton() == MouseEvent.BUTTON1)
+				{
+					selectionLocked = true;
+					gameManager.startNewGame(makePlayer(className));
+				}
 			}
-		});
+		};
+
+		addClickHandler(card, clickHandler);
 
 		return card;
+	}
+
+	private void addClickHandler(Component component, MouseAdapter clickHandler)
+	{
+		component.addMouseListener(clickHandler);
+		if (component instanceof JPanel)
+		{
+			Component[] children = ((JPanel) component).getComponents();
+			for (Component child : children)
+			{
+				addClickHandler(child, clickHandler);
+			}
+		}
+	}
+
+	public void resetSelectionLock()
+	{
+		selectionLocked = false;
 	}
 
 	/**

@@ -37,15 +37,36 @@ public class SaveManager
 
 	public void saveGame(Player player, Dungeon dungeon)
 	{
+		saveGame(player, dungeon, 0);
+	}
+
+	public void saveGame(Player player, Dungeon dungeon, int enemiesDefeated)
+	{
+		saveGame(player, dungeon, enemiesDefeated, null, false);
+	}
+
+	public void saveGame(Player player, Dungeon dungeon, int enemiesDefeated,
+			Battle battle, boolean bossBattle)
+	{
 		try
 		{
 			PrintWriter writer = new PrintWriter(new FileWriter(SAVE_FILE));
 
 			writer.println(player.getCharacterClass());
-
 			writer.println(player.getHealth());
-
+			writer.println(player.getMana());
+			writer.println(player.getStamina());
 			writer.println(dungeon.getStage());
+			writer.println(player.getItemCount());
+			writer.println(enemiesDefeated);
+			boolean inBattle = battle != null && battle.isActive();
+			writer.println(inBattle);
+			if (inBattle)
+			{
+				writer.println(battle.getEnemy().getEnemyType());
+				writer.println(battle.getEnemy().getHealth());
+				writer.println(bossBattle);
+			}
 
 			writer.close();
 
@@ -66,13 +87,58 @@ public class SaveManager
 			String characterClass = fileScanner.nextLine();
 
 			int health = Integer.parseInt(fileScanner.nextLine());
+			int mana = -1;
+			int stamina = -1;
+			int stage;
+			int itemCount = 0;
+			int enemiesDefeated = 0;
+			boolean inBattle = false;
+			String enemyType = "";
+			int enemyHealth = 0;
+			boolean bossBattle = false;
 
-			int stage =
-					Integer.parseInt(fileScanner.nextLine());
+			if (fileScanner.hasNextLine())
+			{
+				String thirdLine = fileScanner.nextLine();
+				if (fileScanner.hasNextLine())
+				{
+					mana = Integer.parseInt(thirdLine);
+					stamina = Integer.parseInt(fileScanner.nextLine());
+					stage = Integer.parseInt(fileScanner.nextLine());
+					if (fileScanner.hasNextLine())
+					{
+						itemCount = Integer.parseInt(fileScanner.nextLine());
+					}
+					if (fileScanner.hasNextLine())
+					{
+						enemiesDefeated = Integer.parseInt(fileScanner.nextLine());
+					}
+					if (fileScanner.hasNextLine())
+					{
+						inBattle = Boolean.parseBoolean(fileScanner.nextLine());
+					}
+					if (inBattle && fileScanner.hasNextLine())
+					{
+						enemyType = fileScanner.nextLine();
+						enemyHealth = Integer.parseInt(fileScanner.nextLine());
+						bossBattle = Boolean.parseBoolean(fileScanner.nextLine());
+					}
+				}
+				else
+				{
+					stage = Integer.parseInt(thirdLine);
+				}
+			}
+			else
+			{
+				stage = 1;
+			}
 
 			fileScanner.close();
 
-			return new GameSave(characterClass, health, stage);
+			return new GameSave(characterClass, health, mana, stamina, stage,
+					itemCount, enemiesDefeated, inBattle, enemyType, enemyHealth,
+					bossBattle);
 		}
 		catch (Exception e)
 		{

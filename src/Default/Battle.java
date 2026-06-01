@@ -91,21 +91,33 @@ public class Battle
 				if (player.getSkillCount() > 0)
 				{
 					Skill skill = player.getSkill(0);
-					// check mana before letting the skill go off
-					if (player.getMana() >= skill.getCost())
+					boolean usesMana = player.getCharacterClass().equals("Mage");
+					int availableResource = usesMana ? player.getMana() : player.getStamina();
+					String resourceName = usesMana ? "Mana" : "Stamina";
+
+					if (availableResource >= skill.getCost())
 					{
-						player.useMana(skill.getCost());
+						if (usesMana)
+						{
+							player.useMana(skill.getCost());
+						}
+						else
+						{
+							player.useStamina(skill.getCost());
+						}
 						int enemyHealthBefore = enemy.getHealth();
 						skill.activate(player, enemy);
 						int damageDone = enemyHealthBefore - enemy.getHealth();
 						battleLog.add("Player uses " + skill.getName()
 								+ " for " + damageDone
 								+ " damage! Enemy HP: " + enemy.getHealth());
-						battleLog.add("Mana remaining: " + player.getMana());
+						battleLog.add(resourceName + " remaining: "
+								+ (usesMana ? player.getMana() : player.getStamina()));
 					}
 					else
 					{
-						battleLog.add("Not enough mana to use " + skill.getName() + "!");
+						battleLog.add("Not enough " + resourceName.toLowerCase()
+								+ " to use " + skill.getName() + "!");
 					}
 				}
 				else

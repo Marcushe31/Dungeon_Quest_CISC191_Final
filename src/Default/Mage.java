@@ -28,8 +28,8 @@ package Default;
 public class Mage extends Player
 {
 	public Mage() {
-		//         health mana stamina damage -- 10 dmg was way too low
-		super("Mage", 110, 100, 50, 15);
+		// health mana stamina damage -- Mage uses mana for skills
+		super("Mage", 125, 120, 0, 18);
 		addSkill(new Fireball());
 	}
 }

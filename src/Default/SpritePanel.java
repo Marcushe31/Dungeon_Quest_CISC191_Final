@@ -62,8 +62,7 @@ public class SpritePanel extends JPanel
 	public SpritePanel(String type)
 	{
 		this.type = type;
-		setBackground(GuiStyle.BACKGROUND);
-		setOpaque(true);
+		setOpaque(false);
 	}
 
 	@Override
@@ -172,49 +171,55 @@ public class SpritePanel extends JPanel
 	// -------------------------------------------------------------------------
 	private void drawWarrior(Graphics2D g)
 	{
-		Color RED = new Color(200, 60, 55), RED_S = new Color(150, 35, 35), RED_H = new Color(230, 95, 90);
+		Color RED = new Color(92, 108, 130), RED_S = new Color(48, 58, 76), RED_H = new Color(185, 198, 215);
 		Color SLV = new Color(205, 212, 228), SLV_S = new Color(150, 158, 180), SLV_H = new Color(240, 245, 255);
 		Color GLD = new Color(222, 182, 70),  GLD_S = new Color(175, 135, 40);
+		Color BLU = new Color(55, 90, 175), BLU_S = new Color(25, 45, 105);
 		Color BRN = new Color(95, 60, 28);
 
-		// plume on helmet
-		shade(g, RED_H, RED_H, RED_S, 18, 1, 4, 4);
+		// steel crest
+		shade(g, SLV, SLV_H, SLV_S, 17, 0, 6, 4);
 		// sword (raised, right side): blade, guard, grip
-		shade(g, SLV, SLV_H, SLV_S, 32, 4, 3, 20);
-		r(g, SLV_H, 33, 5, 1, 16);
-		shade(g, GLD, GLD, GLD_S, 29, 23, 9, 2);
-		shade(g, BRN, new Color(120,80,40), BRN, 33, 25, 2, 5);
+		shade(g, SLV, SLV_H, SLV_S, 33, 4, 3, 21);
+		r(g, SLV_H, 34, 5, 1, 17);
+		shade(g, GLD, GLD, GLD_S, 30, 23, 9, 2);
+		shade(g, BRN, new Color(120,80,40), BRN, 34, 25, 2, 5);
 		// shield (left side)
-		shade(g, GLD, GLD, GLD_S, 3, 16, 6, 13);
-		shade(g, RED, RED_H, RED_S, 4, 19, 4, 7);
-		r(g, GLD, 5, 21, 2, 3);
+		shade(g, GLD, GLD, GLD_S, 2, 17, 6, 13);
+		shade(g, BLU, new Color(80,120,220), BLU_S, 3, 20, 4, 7);
+		r(g, GLD, 4, 21, 2, 5);
 
 		// legs + boots
-		shade(g, RED_S, RED, RED_S, 14, 40, 5, 8);
-		shade(g, RED_S, RED, RED_S, 21, 40, 5, 8);
-		shade(g, BRN, new Color(120,80,40), new Color(60,38,16), 13, 47, 7, 3);
-		shade(g, BRN, new Color(120,80,40), new Color(60,38,16), 20, 47, 7, 3);
+		shade(g, RED_S, RED, RED_S, 14, 40, 5, 9);
+		shade(g, RED_S, RED, RED_S, 21, 40, 5, 9);
+		shade(g, BRN, new Color(120,80,40), new Color(60,38,16), 13, 48, 7, 3);
+		shade(g, BRN, new Color(120,80,40), new Color(60,38,16), 20, 48, 7, 3);
 
-		// torso armor
-		shade(g, RED, RED_H, RED_S, 11, 24, 18, 17);
-		shade(g, RED_S, RED, RED_S, 15, 27, 10, 9);   // chest plate inset
-		r(g, GLD, 11, 24, 18, 1);                      // top trim
-		shade(g, GLD, GLD, GLD_S, 11, 38, 18, 2);      // belt
+		// plate armor, tucked under helmet so the head does not float
+		shade(g, SLV, SLV_H, SLV_S, 11, 20, 18, 21);
+		shade(g, RED, RED_H, RED_S, 15, 27, 10, 9);
+		r(g, GLD, 11, 20, 18, 1);
+		shade(g, SLV_S, SLV, RED_S, 13, 18, 14, 4);
+		r(g, SLV_H, 13, 23, 14, 2);
+		r(g, RED_S, 19, 24, 2, 14);
+		shade(g, GLD, GLD, GLD_S, 11, 38, 18, 2);
 		// shoulder pauldrons
-		shade(g, RED_H, RED_H, RED_S, 7, 24, 6, 5);
-		shade(g, RED_H, RED_H, RED_S, 27, 24, 6, 5);
+		shade(g, SLV, SLV_H, SLV_S, 7, 21, 6, 8);
+		shade(g, SLV, SLV_H, SLV_S, 27, 21, 6, 8);
 
-		// helmet
-		shade(g, RED, RED_H, RED_S, 12, 5, 16, 9);
-		r(g, RED_S, 12, 12, 16, 2);                    // helmet brim shadow
-		// face slot
-		shade(g, SKIN, SKIN_H, SKIN_S, 15, 9, 10, 6);
-		r(g, RED_S, 15, 7, 10, 2);                      // visor bar shadow
+		// steel helmet with visor
+		shade(g, SLV, SLV_H, SLV_S, 10, 3, 20, 16);
+		r(g, SLV_S, 10, 17, 20, 2);
+		// face slot -- bigger opening
+		shade(g, SKIN, SKIN_H, SKIN_S, 13, 7, 14, 10);
+		r(g, RED_S, 13, 7, 14, 2);                     // visor brow
+		r(g, SLV_S, 10, 11, 3, 7);
+		r(g, SLV_S, 27, 11, 3, 7);
 		// eyes, cheeks, mouth
-		eyes(g, 16, 21, 10, new Color(40, 30, 90));
-		r(g, CHEEK, 15, 13, 2, 1);
-		r(g, CHEEK, 23, 13, 2, 1);
-		r(g, new Color(150,70,70), 18, 13, 4, 1);
+		eyes(g, 14, 22, 10, new Color(40, 30, 90));
+		r(g, CHEEK, 13, 14, 3, 1);
+		r(g, CHEEK, 24, 14, 3, 1);
+		r(g, new Color(150,70,70), 18, 15, 4, 1);
 	}
 
 	// -------------------------------------------------------------------------
@@ -234,16 +239,16 @@ public class SpritePanel extends JPanel
 		r(g, CYN_H, 3, 7, 3, 3);
 		r(g, WHT, 4, 8, 1, 1);
 
-		// robe (wide at bottom)
-		shade(g, PUR, PUR_H, PUR_S, 11, 24, 18, 14);
-		shade(g, PUR, PUR_H, PUR_S, 9, 36, 22, 8);
-		r(g, PUR_S, 9, 42, 22, 2);
+		// robe, slim and flat like the other player classes
+		shade(g, PUR, PUR_H, PUR_S, 14, 24, 12, 19);
+		r(g, PUR_H, 15, 24, 2, 14);
+		shade(g, DPU, PUR, PUR_S, 14, 40, 12, 3);
 		// robe star emblem
 		r(g, GLD, 19, 28, 2, 8);
 		r(g, GLD, 16, 31, 8, 2);
 		// feet
-		shade(g, DPU, PUR, PUR_S, 12, 43, 6, 3);
-		shade(g, DPU, PUR, PUR_S, 22, 43, 6, 3);
+		shade(g, DPU, PUR, PUR_S, 14, 43, 5, 3);
+		shade(g, DPU, PUR, PUR_S, 21, 43, 5, 3);
 
 		// head
 		shade(g, SKIN, SKIN_H, SKIN_S, 12, 14, 16, 11);
@@ -372,6 +377,10 @@ public class SpritePanel extends JPanel
 		shade(g, new Color(130,88,40), new Color(160,110,55), BRN, 26, 15, 9, 7);
 		r(g, STD, 28, 16, 2, 2);
 		r(g, STD, 31, 18, 2, 2);
+		// pointy dagger in left hand
+		shade(g, new Color(190,195,205), new Color(235,240,250), new Color(120,125,135), 5, 27, 3, 12);
+		r(g, new Color(235,240,250), 4, 26, 5, 2);
+		shade(g, BRN, BRN_H, new Color(70,40,20), 5, 38, 3, 5);
 
 		// huge pointed ears
 		shade(g, GRN, GRN_H, GRN_S, 1, 15, 9, 8);
@@ -392,12 +401,14 @@ public class SpritePanel extends JPanel
 		r(g, OUT, 26, 18, 3, 2);
 		r(g, WHT, 11, 18, 1, 1);
 		r(g, WHT, 26, 18, 1, 1);
-		// big toothy grin
-		r(g, new Color(20,10,5), 10, 24, 20, 4);
-		r(g, WHT, 11, 24, 3, 3);
-		r(g, WHT, 15, 24, 3, 3);
-		r(g, WHT, 19, 24, 3, 3);
-		r(g, WHT, 23, 24, 3, 3);
+		// jagged toothy grin
+		r(g, new Color(20,10,5), 10, 23, 20, 5);
+		r(g, WHT, 11, 23, 3, 3);
+		r(g, WHT, 15, 23, 2, 4);
+		r(g, WHT, 19, 23, 3, 3);
+		r(g, WHT, 24, 23, 2, 4);
+		r(g, new Color(230,230,210), 13, 26, 3, 2);
+		r(g, new Color(230,230,210), 21, 26, 3, 2);
 
 		// hunched body
 		shade(g, DGR, GRN, GRN_S, 9, 28, 22, 13);
@@ -418,49 +429,57 @@ public class SpritePanel extends JPanel
 	{
 		Color BON = new Color(235, 230, 210), BON_S = new Color(185, 178, 155), BON_H = new Color(255, 252, 238);
 		Color DRK = new Color(22, 16, 12);
-		Color RST = new Color(170, 105, 50), RST_H = new Color(200, 135, 70);
+		Color RST = new Color(155, 95, 55), RST_H = new Color(210, 160, 100);
 		Color GLD = new Color(150, 115, 60);
-
-		// rusty sword (right)
-		shade(g, RST, RST_H, new Color(120,70,30), 30, 6, 4, 22);
-		shade(g, GLD, GLD, new Color(110,85,40), 26, 17, 9, 3);
-		r(g, new Color(90,55,25), 31, 20, 2, 5);
+		Color BLU = new Color(80, 190, 230);
 
 		// skull
-		shade(g, BON, BON_H, BON_S, 12, 1, 16, 13);
+		shade(g, BON, BON_H, BON_S, 11, 4, 18, 12);
+		r(g, BON_S, 10, 8, 2, 5);
+		r(g, BON_S, 28, 8, 2, 5);
 		// eye sockets
-		r(g, DRK, 13, 4, 5, 4);
-		r(g, DRK, 22, 4, 5, 4);
-		r(g, new Color(120,40,40), 14, 5, 2, 2);   // faint red glow
-		r(g, new Color(120,40,40), 23, 5, 2, 2);
+		r(g, DRK, 13, 7, 5, 4);
+		r(g, DRK, 23, 7, 5, 4);
+		r(g, BLU, 14, 8, 2, 2);
+		r(g, BLU, 24, 8, 2, 2);
 		// nose + jaw + teeth
-		r(g, DRK, 19, 8, 3, 3);
-		shade(g, BON_S, BON, BON_S, 13, 11, 14, 4);
-		r(g, BON, 14, 12, 2, 3);
-		r(g, BON, 17, 12, 2, 3);
-		r(g, BON, 20, 12, 2, 3);
-		r(g, BON, 23, 12, 2, 3);
+		r(g, DRK, 19, 11, 3, 3);
+		shade(g, BON_S, BON, BON_S, 13, 14, 14, 4);
+		r(g, BON, 14, 15, 2, 3);
+		r(g, BON, 17, 15, 2, 3);
+		r(g, BON, 20, 15, 2, 3);
+		r(g, BON, 23, 15, 2, 3);
 
 		// spine + ribcage
-		r(g, BON_S, 19, 15, 2, 4);
-		shade(g, BON, BON_H, BON_S, 12, 19, 16, 14);
-		r(g, DRK, 14, 20, 2, 12);   // rib gaps
-		r(g, DRK, 17, 20, 2, 12);
-		r(g, DRK, 20, 20, 2, 12);
-		r(g, DRK, 23, 20, 2, 12);
+		r(g, BON_S, 19, 18, 2, 4);
+		shade(g, BON, BON_H, BON_S, 12, 22, 16, 12);
+		r(g, DRK, 14, 23, 2, 10);
+		r(g, DRK, 18, 23, 2, 10);
+		r(g, DRK, 22, 23, 2, 10);
+		r(g, DRK, 26, 23, 1, 10);
+		r(g, BON_H, 13, 24, 14, 1);
+		r(g, BON_H, 13, 28, 14, 1);
+		r(g, BLU, 19, 27, 2, 2);
 
 		// arms (thin bones)
-		shade(g, BON, BON_H, BON_S, 6, 19, 7, 3);
-		shade(g, BON, BON_H, BON_S, 6, 21, 3, 9);
-		shade(g, BON, BON_H, BON_S, 27, 19, 7, 3);
-		shade(g, BON, BON_H, BON_S, 29, 21, 3, 9);
+		shade(g, BON, BON_H, BON_S, 6, 22, 7, 3);
+		shade(g, BON, BON_H, BON_S, 5, 24, 3, 10);
+		shade(g, BON, BON_H, BON_S, 27, 22, 7, 3);
+		shade(g, BON, BON_H, BON_S, 30, 24, 3, 9);
 
 		// pelvis + legs + feet
-		shade(g, BON_S, BON, BON_S, 13, 33, 14, 4);
-		shade(g, BON, BON_H, BON_S, 14, 37, 4, 10);
-		shade(g, BON, BON_H, BON_S, 22, 37, 4, 10);
-		r(g, BON_S, 12, 47, 7, 3);
-		r(g, BON_S, 21, 47, 7, 3);
+		shade(g, BON_S, BON, BON_S, 13, 35, 14, 4);
+		shade(g, BON, BON_H, BON_S, 14, 39, 4, 8);
+		shade(g, BON, BON_H, BON_S, 22, 39, 4, 8);
+		r(g, BON_S, 12, 47, 7, 2);
+		r(g, BON_S, 21, 47, 7, 2);
+
+		// curved rusty blade and handle in front of the right arm
+		shade(g, RST, RST_H, new Color(120,70,30), 32, 7, 4, 25);
+		r(g, RST_H, 31, 8, 2, 8);
+		r(g, new Color(230,170,95), 33, 8, 1, 21);
+		shade(g, GLD, GLD, new Color(110,85,40), 27, 22, 12, 3);
+		shade(g, new Color(80,48,24), new Color(125,75,35), new Color(55,32,14), 34, 25, 3, 10);
 	}
 
 	// -------------------------------------------------------------------------
@@ -468,66 +487,71 @@ public class SpritePanel extends JPanel
 	// -------------------------------------------------------------------------
 	private void drawDragon(Graphics2D g)
 	{
-		Color RED = new Color(170, 35, 35), RED_S = new Color(120, 18, 18), RED_H = new Color(210, 70, 70);
-		Color BEL = new Color(225, 150, 90), BEL_S = new Color(185, 110, 60);   // belly
+		Color RED = new Color(175, 28, 28), RED_S = new Color(105, 12, 12), RED_H = new Color(230, 65, 55);
+		Color BEL = new Color(235, 155, 85), BEL_S = new Color(175, 95, 50);
+		Color DRK = new Color(70, 8, 8);
 		Color ORN = new Color(245, 140, 35);
 		Color FIR = new Color(255, 225, 70);
 		Color GLD = new Color(225, 185, 55);
 
-		// wings (spread wide, behind body)
-		shade(g, RED_S, RED, new Color(95,12,12), 0, 7, 12, 19);
-		shade(g, RED_S, RED, new Color(95,12,12), 28, 7, 12, 19);
-		r(g, RED, 2, 9, 8, 13);          // inner membrane lighter
-		r(g, RED, 30, 9, 8, 13);
-		r(g, RED_S, 5, 9, 1, 13);        // wing ribs
-		r(g, RED_S, 8, 9, 1, 13);
-		r(g, RED_S, 31, 9, 1, 13);
-		r(g, RED_S, 34, 9, 1, 13);
+		// jagged wings with dark membranes, inset so the outline is not clipped
+		shade(g, DRK, RED, RED_S, 2, 8, 11, 20);
+		shade(g, DRK, RED, RED_S, 27, 8, 11, 20);
+		r(g, RED_H, 4, 10, 3, 14);
+		r(g, RED_H, 33, 10, 3, 14);
+		r(g, RED_S, 8, 12, 2, 15);
+		r(g, RED_S, 30, 12, 2, 15);
+		r(g, new Color(45,5,5), 2, 25, 5, 4);
+		r(g, new Color(45,5,5), 33, 25, 5, 4);
+		r(g, GLD, 5, 7, 3, 3);
+		r(g, GLD, 32, 7, 3, 3);
 
-		// tail (curls right, with spade tip)
-		r(g, RED, 26, 38, 8, 3);
-		r(g, RED, 30, 41, 5, 3);
-		shade(g, RED_H, RED_H, RED_S, 33, 42, 4, 4);
+		// tail curls to the side with a spade tip
+		r(g, RED, 25, 39, 8, 3);
+		r(g, RED, 29, 42, 5, 3);
+		shade(g, RED_H, RED_H, RED_S, 33, 42, 4, 5);
 
-		// body
-		shade(g, RED, RED_H, RED_S, 9, 22, 22, 17);
-		shade(g, BEL, BEL, BEL_S, 13, 25, 14, 11);   // belly scales
+		// body and belly scales
+		shade(g, RED, RED_H, RED_S, 8, 21, 24, 19);
+		shade(g, BEL, BEL, BEL_S, 13, 25, 14, 12);
 		r(g, BEL_S, 13, 28, 14, 1);
 		r(g, BEL_S, 13, 31, 14, 1);
+		r(g, BEL_S, 13, 34, 14, 1);
 
 		// legs + claws
-		shade(g, RED, RED_H, RED_S, 11, 37, 7, 7);
-		shade(g, RED, RED_H, RED_S, 22, 37, 7, 7);
-		r(g, new Color(230,225,215), 11, 43, 2, 2);
-		r(g, new Color(230,225,215), 15, 43, 2, 2);
-		r(g, new Color(230,225,215), 22, 43, 2, 2);
-		r(g, new Color(230,225,215), 26, 43, 2, 2);
+		shade(g, RED, RED_H, RED_S, 10, 38, 8, 7);
+		shade(g, RED, RED_H, RED_S, 22, 38, 8, 7);
+		r(g, WHT, 10, 44, 2, 2);
+		r(g, WHT, 14, 44, 2, 2);
+		r(g, WHT, 22, 44, 2, 2);
+		r(g, WHT, 27, 44, 2, 2);
 
-		// head
-		shade(g, RED, RED_H, RED_S, 10, 7, 20, 14);
-		// horns
-		shade(g, BEL, BEL, BEL_S, 11, 2, 4, 6);
-		shade(g, BEL, BEL, BEL_S, 25, 2, 4, 6);
+		// head, horns, crown spikes
+		shade(g, RED, RED_H, RED_S, 9, 7, 22, 15);
+		shade(g, BEL, BEL, BEL_S, 10, 1, 4, 8);
+		shade(g, BEL, BEL, BEL_S, 26, 1, 4, 8);
+		r(g, RED_H, 16, 3, 3, 5);
+		r(g, RED_H, 21, 3, 3, 5);
+		r(g, GLD, 18, 2, 1, 3);
+		r(g, GLD, 22, 2, 1, 3);
 		// snout + mouth
-		shade(g, RED_H, RED_H, RED_S, 12, 17, 16, 5);
-		r(g, new Color(25,8,8), 13, 19, 14, 3);
-		r(g, WHT, 14, 19, 2, 2);          // fangs
-		r(g, WHT, 17, 19, 2, 2);
-		r(g, WHT, 20, 19, 2, 2);
-		r(g, WHT, 23, 19, 2, 2);
+		shade(g, RED_H, RED_H, RED_S, 11, 17, 18, 6);
+		r(g, new Color(25,8,8), 13, 19, 14, 4);
+		r(g, WHT, 14, 19, 2, 3);
+		r(g, WHT, 18, 19, 2, 3);
+		r(g, WHT, 22, 19, 2, 3);
+		r(g, WHT, 26, 19, 2, 3);
 		// gold eyes with slit pupils
 		r(g, GLD, 12, 10, 5, 4);
 		r(g, GLD, 23, 10, 5, 4);
-		r(g, new Color(80,10,10), 14, 11, 2, 2);
-		r(g, new Color(80,10,10), 24, 11, 2, 2);
-		r(g, WHT, 12, 10, 1, 1);
-		r(g, WHT, 23, 10, 1, 1);
-
-		// fire breath under the mouth
-		shade(g, ORN, FIR, ORN, 8, 21, 7, 4);
-		r(g, FIR, 10, 22, 3, 2);
-		shade(g, ORN, FIR, ORN, 25, 21, 7, 4);
-		r(g, FIR, 27, 22, 3, 2);
+		r(g, new Color(60,5,5), 14, 10, 1, 4);
+		r(g, new Color(60,5,5), 25, 10, 1, 4);
+		r(g, RED_S, 10, 15, 20, 1);
+		// flame cheeks and smoke/fire under mouth
+		shade(g, ORN, FIR, ORN, 8, 20, 7, 4);
+		r(g, FIR, 10, 21, 3, 2);
+		shade(g, ORN, FIR, ORN, 26, 20, 7, 4);
+		r(g, FIR, 28, 21, 3, 2);
 	}
 
 	// -------------------------------------------------------------------------
